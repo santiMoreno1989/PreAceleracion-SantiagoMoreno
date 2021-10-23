@@ -12,7 +12,7 @@ namespace APPConsola1.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public Posts Posts { get; set; }
-        public Comments Comments { get; set; }
+        public Post Posts { get; set; }
+        public Comment Comments { get; set; }
     }
 }

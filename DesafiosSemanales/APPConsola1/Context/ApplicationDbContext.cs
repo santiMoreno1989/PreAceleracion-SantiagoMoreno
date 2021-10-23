@@ -16,7 +16,7 @@ namespace APPConsola1.Context
 
         }
         public DbSet<Usuario> Usuarios {get; set;}
-        public DbSet<Comments> Comments { get; set; }
-        public DbSet<Posts> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }

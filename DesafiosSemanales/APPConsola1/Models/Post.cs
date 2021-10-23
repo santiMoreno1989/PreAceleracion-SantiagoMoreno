@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace APPConsola1.Models
 {
-    class Posts
+    class Post
     {
         public int Id { get; set; }
         public string Title { get; set; }

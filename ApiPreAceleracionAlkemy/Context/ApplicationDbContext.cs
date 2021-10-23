@@ -1,4 +1,4 @@
-﻿using ApiPreAceleracionAlkemy.Models;
+﻿using ApiPreAceleracionAlkemy.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,8 @@ namespace ApiPreAceleracionAlkemy.Data
         {
 
         }
-        public DbSet<Persona> Personas { get; set; }
+        public DbSet<Personaje> Personajes { get; set; }
+        public DbSet<Pelicula> Peliculas { get; set; }
+        public DbSet<Genero> Generos { get; set; }
     }
 }
