@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace APPConsola1.Models
 {
-    class Comment
+   public class Comment
     {
        
         public int Id { get; set; }

@@ -8,15 +8,31 @@ using System.Threading.Tasks;
 
 namespace APPConsola1.Context
 {
-    class ApplicationDbContext : DbContext
+   public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            :base(options)
-        {
+        private const string Schema = "Publicaciones";
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\\mssqllocaldb;Database=PosteoDb;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
-        public DbSet<Usuario> Usuarios {get; set;}
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Post> Posts { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.HasDefaultSchema(Schema);
+
+            //Informacion precargada en la entidad Usuario //
+            modelBuilder.Entity<Usuario>().HasData(
+                new Usuario()
+                {
+                    Id = 1,
+                    Name = "Santiago",
+                    Password = "Nueva1234",
+                    Email = "correo@ejemplo.com"
+                });
+        }
+        public DbSet<Usuario> Usuarios { get; set; } = null!;
+        public DbSet<Comment> Comments { get; set; } = null!;
+        public DbSet<Post> Posts { get; set; } = null!;
     }
 }
