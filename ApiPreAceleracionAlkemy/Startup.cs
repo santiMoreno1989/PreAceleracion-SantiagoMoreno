@@ -1,4 +1,5 @@
 using ApiPreAceleracionAlkemy.Data;
+using ApiPreAceleracionAlkemy.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,9 @@ namespace ApiPreAceleracionAlkemy
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddSingleton(Configuration);
+            services.AddScoped<IPersonajeRepository, PersonajeRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiPreAceleracionAlkemy", Version = "v1" });
