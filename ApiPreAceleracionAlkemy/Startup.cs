@@ -33,11 +33,13 @@ namespace ApiPreAceleracionAlkemy
                 Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSingleton(Configuration);
-            services.AddScoped<IPersonajeRepository, PersonajeRepository>();
+            //services.AddScoped<IPersonajeRepository, PersonajeRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiPreAceleracionAlkemy", Version = "v1" });
             });
+            services.AddScoped<IPersonajeRepository, PersonajeRepository>();
+            services.AddScoped<IPeliculaRepository, PeliculaRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

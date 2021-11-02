@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Repositories
 {
-     interface IBaseRepository<TEntity> where TEntity : class
+     public interface IBaseRepository<TEntity> where TEntity : class
     {
         List<TEntity> GetAllEntities();
         TEntity GetEntity(int id);

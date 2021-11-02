@@ -1,5 +1,6 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,15 +14,22 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [Route(template:"api/[controller]")]
     public class PeliculasController : ControllerBase
     {
-        private readonly ApplicationDbContext  _context;
-        public PeliculasController(ApplicationDbContext context)
+        private readonly IPeliculaRepository _peliculaRepository;
+        public PeliculasController(IPeliculaRepository peliculaRepository)
         {
-            _context= context;
+            _peliculaRepository = peliculaRepository;
         }
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string nombre)
         {
-            return Ok(_context.Peliculas.ToList());
+            var peliculas = _peliculaRepository.GetPeliculas();
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                peliculas = (from b in peliculas where b.Titulo == nombre
+                             orderby b.Titulo ascending
+                             select b).ToList();
+            }
+            return Ok(peliculas);
         }
         [HttpPost]
         public IActionResult Post(PeliculaPostViewModel peliculaViewModel)
@@ -33,38 +41,47 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 FechaCreacion = peliculaViewModel.FechaCreacion,
                 Calificacion = peliculaViewModel.Calificacion
             };
-            _context.Peliculas.Add(pelicula);
-            _context.SaveChanges();
+            _peliculaRepository.AddEntity(pelicula);
+            
             return Ok(pelicula);
         }
         [HttpPut]
         //TODO Agregar al bindeo Relacion Pelicula- Personaje y Pelicula-genero //
-        public IActionResult Put(Pelicula pelicula)
+        public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
-            if(_context.Peliculas.FirstOrDefault(m => m.Id == pelicula.Id)== null)
+
+            var movie = new Pelicula
             {
-                return BadRequest("La pelicula no se ha encontrado");
+                Id = peliculaViewModel.Id,
+                Imagen = peliculaViewModel.Imagen,
+                Titulo = peliculaViewModel.Titulo,
+                FechaCreacion = peliculaViewModel.FechaCreacion,
+                Calificacion = peliculaViewModel.Calificacion
+
+            };
+
+            movie = _peliculaRepository.GetPelicula(movie.Id);
+
+            if(movie == null)
+            {
+                return NotFound("Pelicula no encontrada");
             }
-            var internalPelicula = _context.Peliculas.Find(pelicula.Id);
-            internalPelicula.Titulo = pelicula.Titulo;
-            internalPelicula.FechaCreacion = pelicula.FechaCreacion;
-            internalPelicula.Calificacion = pelicula.Calificacion;
-            _context.SaveChanges();
-            return Ok(_context.Peliculas.ToList());
+            
+            _peliculaRepository.AddEntity(movie);
+
+            return Ok(movie);
         }
         [HttpDelete]
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
-            if (_context.Peliculas.FirstOrDefault(m => m.Id == id) == null)
+            var peliculas = _peliculaRepository.GetPelicula(id);
+            if (peliculas == null)
             {
-                return BadRequest("La pelicula que desea eliminar no se ha encontrado");
+                return NotFound("La pelicula solicitada no existe");
             }
-            var internalPelicula = _context.Peliculas.Find(id);
-            _context.Peliculas.Remove(internalPelicula);
-            _context.SaveChanges();
-
-            return Ok(_context.Peliculas.ToList());
+            _peliculaRepository.DeleteEntity(id);
+            return Ok($"La pelicula {peliculas.Titulo} ha sido borrada correctamente");
         }
     }
 }
