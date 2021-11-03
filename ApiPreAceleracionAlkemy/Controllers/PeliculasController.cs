@@ -20,15 +20,22 @@ namespace ApiPreAceleracionAlkemy.Controllers
             _peliculaRepository = peliculaRepository;
         }
         [HttpGet]
-        public IActionResult Get(string nombre)
+        [Route("character")]
+        public IActionResult Get(string name,int genre)
         {
             var peliculas = _peliculaRepository.GetPeliculas();
-            if (!string.IsNullOrEmpty(nombre))
+
+            if (!string.IsNullOrEmpty(name))
             {
-                peliculas = (from b in peliculas where b.Titulo == nombre
-                             orderby b.Titulo ascending
+                peliculas = (from b in peliculas where b.Titulo == name
                              select b).ToList();
             }
+            if(genre != 0)
+            {
+                peliculas = peliculas.Where(x => x.Personajes.FirstOrDefault(m => m.Id == genre) != null).ToList();
+            }
+            if (!peliculas.Any()) return NoContent();
+
             return Ok(peliculas);
         }
         [HttpPost]
@@ -49,24 +56,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
         //TODO Agregar al bindeo Relacion Pelicula- Personaje y Pelicula-genero //
         public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
-
-            var movie = new Pelicula
-            {
-                Id = peliculaViewModel.Id,
-                Imagen = peliculaViewModel.Imagen,
-                Titulo = peliculaViewModel.Titulo,
-                FechaCreacion = peliculaViewModel.FechaCreacion,
-                Calificacion = peliculaViewModel.Calificacion
-
-            };
-
-            movie = _peliculaRepository.GetPelicula(movie.Id);
+            var  movie = _peliculaRepository.GetPelicula(peliculaViewModel.Id);
 
             if(movie == null)
             {
                 return NotFound("Pelicula no encontrada");
             }
-            
+            movie.Imagen = peliculaViewModel.Imagen;
+            movie.Titulo = peliculaViewModel.Titulo;
+            movie.Calificacion = peliculaViewModel.Calificacion;
+
             _peliculaRepository.AddEntity(movie);
 
             return Ok(movie);

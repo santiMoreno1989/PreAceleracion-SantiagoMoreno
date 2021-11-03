@@ -3,13 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ApiPreAceleracionAlkemy.Migrations
 {
-    public partial class SeAgregaronEntidadesGeneroPeliculaPersonajeYPrimaryKey : Migration
+    public partial class CreacionInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Personas");
-
             migrationBuilder.CreateTable(
                 name: "Generos",
                 columns: table => new
@@ -112,19 +109,6 @@ namespace ApiPreAceleracionAlkemy.Migrations
 
             migrationBuilder.DropTable(
                 name: "Generos");
-
-            migrationBuilder.CreateTable(
-                name: "Personas",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Personas", x => x.Id);
-                });
         }
     }
 }

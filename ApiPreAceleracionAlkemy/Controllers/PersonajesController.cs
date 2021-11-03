@@ -23,26 +23,26 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpGet]
-        // TODO : QUERY SOBRE PELICULAS //
-        public IActionResult Get(string nombre, short edad)
+        [Route("character")]
+        public IActionResult Get(string name, short age, int movies)
         {
             var personaje = _personajeRepository.GetPersonajes();
 
-            if (!string.IsNullOrEmpty(nombre))
+            if (!string.IsNullOrEmpty(name))
             {
-                personaje = personaje.Where(n => n.Nombre == nombre).ToList();
+                personaje = personaje.Where(n => n.Nombre == name).ToList();
             }
-            if(edad != 0)
+            if(age != 0)
             {
-                personaje = personaje.Where(e => e.Edad == edad).ToList();
+                personaje = personaje.Where(e => e.Edad == age).ToList();
             }
-            
-            //if (!string.IsNullOrEmpty(pelicula))
-            //{
-                
-            //}
+            if(movies != 0)
+            {
+                personaje = personaje.Where(x => x.Peliculas.FirstOrDefault(p => p.Id == movies) != null).ToList();
+            }
 
             if (!personaje.Any()) return NoContent();
+            
             return Ok(personaje);
         }
 
@@ -62,27 +62,20 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpPut]
-        [Route("Editar Personaje")]
         //TODO : Agregar al Bindeo la relacion Personaje-Pelicula //
         public  IActionResult Put(PesonajePutViewModel personajeViewModel)
         {
+            var personajeEdit = _personajeRepository.GetPersonaje(personajeViewModel.Id);
             
-            var personajeEdit = new Personaje
-            {
-                Id = personajeViewModel.Id,   
-                Imagen = personajeViewModel.Imagen,
-                Nombre = personajeViewModel.Nombre,
-                Edad = personajeViewModel.Edad,
-                Peso = personajeViewModel.Peso,
-                Historia = personajeViewModel.Historia
-            };
-
             if (personajeEdit == null)
             {
-                return NotFound($"El personaje con id {personajeEdit.Id} no exite.");
+                return NotFound($"El personaje solicitado no exite.");
             }
-
-            personajeEdit = _personajeRepository.GetPersonaje(personajeEdit.Id);
+            personajeEdit.Imagen = personajeViewModel.Imagen;
+            personajeEdit.Nombre = personajeViewModel.Nombre;
+            personajeEdit.Edad = personajeViewModel.Edad;
+            personajeEdit.Peso = personajeViewModel.Peso;
+            personajeEdit.Historia = personajeViewModel.Historia;
 
             _personajeRepository.UpdateEntity(personajeEdit);
             

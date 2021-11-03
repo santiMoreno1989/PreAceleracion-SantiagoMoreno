@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPreAceleracionAlkemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211023202120_SeAgregaronEntidadesGeneroPeliculaPersonajeYPrimaryKey")]
-    partial class SeAgregaronEntidadesGeneroPeliculaPersonajeYPrimaryKey
+    [Migration("20211102233716_CreacionInicial")]
+    partial class CreacionInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
