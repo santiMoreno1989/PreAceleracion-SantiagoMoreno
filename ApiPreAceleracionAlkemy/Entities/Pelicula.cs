@@ -13,6 +13,6 @@ namespace ApiPreAceleracionAlkemy.Entities
         public DateTime FechaCreacion { get; set; }
         public short Calificacion { get; set; }
         public ICollection<Personaje> Personajes { get; set; }
-        public Genero Genero { get; set; }
+        public ICollection<Genero> Genero { get; set; }
     }
 }

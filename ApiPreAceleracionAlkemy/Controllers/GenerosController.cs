@@ -1,5 +1,7 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Repositories;
+using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,36 +10,60 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
 {
+    [ApiController]
+    [Route(template:"api/[controller]")]
     public class GenerosController : ControllerBase
     {
 
-        private readonly ApplicationDbContext _context;
-        public GenerosController(ApplicationDbContext context)
+        private readonly IGeneroRepository _generoRepository;
+        public GenerosController(IGeneroRepository generoRepository)
         {
-            _context = context;
+            _generoRepository = generoRepository;
         }
         [HttpGet]
         public IActionResult Get()
         {
+            var genero = _generoRepository.GetGeneros();
 
-            return Ok(_context.Generos.ToList());
+            return Ok(genero);
         }
+
         [HttpPost]
-        public IActionResult Post(Genero genero)
+        public IActionResult Post(GeneroPostViewModel generoPostViewModel)
         {
-            _context.Generos.Add(genero);
-            _context.SaveChanges();
-            return Ok(_context.Generos.ToList());
+            var genero = new Genero
+            {
+                Nombre = generoPostViewModel.Nombre,
+                Imagen = generoPostViewModel.Imagen
+            };
+            _generoRepository.AddEntity(genero);
+            return Ok(genero);
         }
         [HttpPut]
-        public IActionResult Put()
+        public IActionResult Put(GeneroPutViewModel generoPutViewModel)
         {
-            return Ok();
+            var editarGenero = _generoRepository.GetGenero(generoPutViewModel.Id);
+            editarGenero.Nombre = generoPutViewModel.Nombre;
+            editarGenero.Imagen = generoPutViewModel.Imagen;
+            if(editarGenero == null)
+            {
+                return BadRequest("El genero no existe");
+            }
+            _generoRepository.UpdateEntity(editarGenero);
+            
+            return Ok(editarGenero);
         }
         [HttpDelete]
-        public IActionResult Delete()
+        [Route("{id}")]
+        public IActionResult Delete(int id)
         {
-            return Ok();
+           var generoDelete = _generoRepository.GetGenero(id);
+            if(generoDelete == null)
+            {
+                return NotFound($"el genero no existe");
+            }
+            _generoRepository.DeleteEntity(id);
+            return Ok($"El genero {generoDelete.Nombre} ha sido eliminado correctamente.");
         }
 
     }

@@ -62,7 +62,6 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpPut]
-        //TODO : Agregar al Bindeo la relacion Personaje-Pelicula //
         public  IActionResult Put(PesonajePutViewModel personajeViewModel)
         {
             var personajeEdit = _personajeRepository.GetPersonaje(personajeViewModel.Id);

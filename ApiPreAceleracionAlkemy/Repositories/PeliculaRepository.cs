@@ -1,6 +1,5 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

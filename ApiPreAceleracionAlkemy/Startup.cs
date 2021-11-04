@@ -40,6 +40,7 @@ namespace ApiPreAceleracionAlkemy
             });
             services.AddScoped<IPersonajeRepository, PersonajeRepository>();
             services.AddScoped<IPeliculaRepository, PeliculaRepository>();
+            services.AddScoped<IGeneroRepository, GeneroRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

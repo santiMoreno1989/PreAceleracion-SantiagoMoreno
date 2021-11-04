@@ -53,7 +53,6 @@ namespace ApiPreAceleracionAlkemy.Controllers
             return Ok(pelicula);
         }
         [HttpPut]
-        //TODO Agregar al bindeo Relacion Pelicula- Personaje y Pelicula-genero //
         public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
             var  movie = _peliculaRepository.GetPelicula(peliculaViewModel.Id);
@@ -66,7 +65,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             movie.Titulo = peliculaViewModel.Titulo;
             movie.Calificacion = peliculaViewModel.Calificacion;
 
-            _peliculaRepository.AddEntity(movie);
+            _peliculaRepository.UpdateEntity(movie);
 
             return Ok(movie);
         }
