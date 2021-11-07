@@ -2,6 +2,8 @@
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
+using ApiPreAceleracionAlkemy.ViewModel.PersonajeView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +15,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     
     public class PersonajesController : ControllerBase
     {
@@ -38,7 +41,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             }
             if(movies != 0)
             {
-                personaje = personaje.Where(x => x.Peliculas.FirstOrDefault(p => p.Id == movies) != null).ToList();
+                personaje = personaje.Where(p => p.Peliculas.FirstOrDefault(x => x.Id == movies)!= null).ToList();
             }
 
             if (!personaje.Any()) return NoContent();
@@ -82,7 +85,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpDelete]
-        [Route(template:"Eliminar Personaje/{id}")]
+        [Route(template:"{id}")]
         public IActionResult Delete(int id)
         {
 

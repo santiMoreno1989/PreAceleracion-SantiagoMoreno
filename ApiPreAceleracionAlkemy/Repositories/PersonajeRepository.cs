@@ -20,7 +20,7 @@ namespace ApiPreAceleracionAlkemy.Repositories
         }
         public List<Personaje> GetPersonajes()
         {
-            return DbSet.Include(p => p.Peliculas).ToList();
+            return DbSet.Include(p => p.Peliculas).ThenInclude(g => g.Genero).ToList();
         }
     }
 }
