@@ -2,6 +2,7 @@
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 {
     [ApiController]
     [Route(template:"api/[controller]")]
+    [Authorize(Roles = "Admin,User")]
     public class GenerosController : ControllerBase
     {
 
@@ -21,6 +23,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             _generoRepository = generoRepository;
         }
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get()
         {
             var genero = _generoRepository.GetGeneros();

@@ -20,10 +20,12 @@ namespace ApiPreAceleracionAlkemy.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public AuthenticationController(UserManager<User> userManager,SignInManager<User> signInManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AuthenticationController(UserManager<User> userManager,SignInManager<User> signInManager,RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         
         [HttpPost]
@@ -56,12 +58,75 @@ namespace ApiPreAceleracionAlkemy.Controllers
                     }
                     );
             }
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+            if (!await _roleManager.RoleExistsAsync("Admin"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            await _userManager.AddToRoleAsync(user, "User");
             return Ok(new { 
                 Status="Success",
                 Messege=$"Se ha creado el usuario {user.UserName} correctamente!"
             });
         }
+
         [HttpPost]
+        [Route(template:"registerAdmin")]
+        public async Task<IActionResult> RegistroAdmin([FromBody]RegisterRequestModel model)
+        {
+            
+            var existUser = await _userManager.FindByNameAsync(model.Username);
+            if (existUser != null)
+            {
+                return BadRequest(new
+                {
+                    Status = "Error",
+                    Messege = $"El nombre de usuario {model.Username} ya existe."
+                });
+            }
+
+            var user = new User
+            {
+                UserName = model.Username,
+                Email = model.Email,
+                IsActive = true
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new
+                    {
+                        Status = "Error",
+                        Messege = $"La creacion del usuario ha fallado!{string.Join(",", result.Errors.Select(e => e.Description))} "
+                    }
+                    );
+            }
+
+            if(!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+            if(!await _roleManager.RoleExistsAsync("Admin"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            await _userManager.AddToRoleAsync(user, "Admin");
+
+            return Ok(new
+            {
+                Status = "Success",
+                Messege = $"Se ha creado el usuario {user.UserName} correctamente!"
+            });
+
+        }
+
+        [HttpPost]
+        [Route("login")]
         public async  Task<IActionResult> LoginUser([FromBody] LoginViewModel model)
         {
            var result = await _signInManager.PasswordSignInAsync(model.UserName,model.Password,false ,false);

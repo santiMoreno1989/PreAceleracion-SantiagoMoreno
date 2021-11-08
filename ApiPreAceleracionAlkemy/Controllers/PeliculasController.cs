@@ -14,7 +14,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
     
     [ApiController]
     [Route(template:"api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin,User")]
     public class PeliculasController : ControllerBase
     {
         private readonly IPeliculaRepository _peliculaRepository;
@@ -25,6 +25,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         [HttpGet]
         [Route("movies")]
+        [AllowAnonymous]
         // TODO : Falta Query Orden ASC & DESC //
         public IActionResult Get(string name,int genre)
         {

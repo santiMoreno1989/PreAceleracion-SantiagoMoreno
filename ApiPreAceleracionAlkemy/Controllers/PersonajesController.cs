@@ -15,7 +15,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles ="Admin,User")]
     
     public class PersonajesController : ControllerBase
     {
@@ -27,6 +27,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         [HttpGet]
         [Route("character")]
+        [AllowAnonymous]
         public IActionResult Get(string name, short age, int movies)
         {
             var personaje = _personajeRepository.GetPersonajes();

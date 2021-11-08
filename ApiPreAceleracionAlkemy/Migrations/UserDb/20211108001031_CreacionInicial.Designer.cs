@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPreAceleracionAlkemy.Migrations.UserDb
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20211105233407_CreacionUserDb")]
-    partial class CreacionUserDb
+    [Migration("20211108001031_CreacionInicial")]
+    partial class CreacionInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

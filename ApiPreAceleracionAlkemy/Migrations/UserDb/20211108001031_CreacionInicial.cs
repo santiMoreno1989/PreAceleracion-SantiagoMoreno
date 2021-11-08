@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ApiPreAceleracionAlkemy.Migrations.UserDb
 {
-    public partial class CreacionUserDb : Migration
+    public partial class CreacionInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

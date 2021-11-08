@@ -71,6 +71,7 @@ namespace ApiPreAceleracionAlkemy
                 options.UseSqlServer(Configuration.GetConnectionString("UserConnection"));
                
             });
+           
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSingleton(Configuration);
