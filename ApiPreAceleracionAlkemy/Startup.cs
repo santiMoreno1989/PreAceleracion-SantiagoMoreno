@@ -113,7 +113,8 @@ namespace ApiPreAceleracionAlkemy
             services.AddScoped<IGeneroRepository, GeneroRepository>();
             services.AddSingleton<IMailService, MailService>();
 
-            //Se Elimino SendGrid Key en esta parte de la api//
+            //Recuerde poner la APi Key Generada con SendGird para envio de mails// 
+            //services.AddSendGrid(k => k.ApiKey = "");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -20,7 +20,7 @@ namespace ApiPreAceleracionAlkemy.Services
         {
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("santiagom@gmail.com", "Pre-Aceleracion-Santiago-Moreno"),
+                From = new EmailAddress("santidota2012@gmail.com", "Pre-aceleracion Santiago Moreno"),
                 Subject = "Se ha registrado correctamente.",
                 PlainTextContent = $"Se ha creado el usuario {user.UserName} correcatamente."
             };
