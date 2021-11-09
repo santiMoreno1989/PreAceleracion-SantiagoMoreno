@@ -8,8 +8,9 @@ namespace ApiPreAceleracionAlkemy.ViewModel.PersonajeView
 {
     public class PersonajeGetViewModel
     {
+        public int Id { get; set; }
+        public byte[] Imagen { get; set; }
         public string name { get; set; }
-        public short age { get; set; }
-        public List<int> movies { get; set; } = new List<int>();
+
     }
 }

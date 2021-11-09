@@ -2,6 +2,7 @@ using ApiPreAceleracionAlkemy.Context;
 using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
+using ApiPreAceleracionAlkemy.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SendGrid.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,6 +111,9 @@ namespace ApiPreAceleracionAlkemy
             services.AddScoped<IPersonajeRepository, PersonajeRepository>();
             services.AddScoped<IPeliculaRepository, PeliculaRepository>();
             services.AddScoped<IGeneroRepository, GeneroRepository>();
+            services.AddSingleton<IMailService, MailService>();
+
+            services.AddSendGrid(k => k.ApiKey = "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");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

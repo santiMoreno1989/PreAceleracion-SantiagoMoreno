@@ -26,6 +26,17 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpGet]
+        [Route("characters")]
+        public IActionResult GetList(PersonajeGetViewModel personajeGetViewModel)
+        {
+            var ListaPersonajes = _personajeRepository.GetPersonaje(personajeGetViewModel.Id);
+            ListaPersonajes.Nombre = personajeGetViewModel.name;
+            ListaPersonajes.Imagen = personajeGetViewModel.Imagen;
+            
+            return Ok(ListaPersonajes);
+        }
+
+        [HttpGet]
         [Route("character")]
         [AllowAnonymous]
         public IActionResult Get(string name, short age, int movies)

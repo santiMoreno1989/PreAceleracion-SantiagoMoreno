@@ -1,4 +1,5 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel.AuthView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -21,11 +22,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AuthenticationController(UserManager<User> userManager,SignInManager<User> signInManager,RoleManager<IdentityRole> roleManager)
+        private readonly IMailService _mailService;
+        public AuthenticationController(UserManager<User> userManager,SignInManager<User> signInManager,RoleManager<IdentityRole> roleManager, IMailService mailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _mailService = mailService;
         }
         
         [HttpPost]
@@ -67,6 +70,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
             await _userManager.AddToRoleAsync(user, "User");
+            await _mailService.SendEmail(user);
             return Ok(new { 
                 Status="Success",
                 Messege=$"Se ha creado el usuario {user.UserName} correctamente!"
@@ -116,6 +120,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
             }
             await _userManager.AddToRoleAsync(user, "Admin");
+            await _mailService.SendEmail(user);
 
             return Ok(new
             {
