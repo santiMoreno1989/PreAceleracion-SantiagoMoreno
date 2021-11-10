@@ -22,5 +22,6 @@ namespace ApiPreAceleracionAlkemy.Repositories
         {
             return DbSet.Include(p => p.Peliculas).ThenInclude(g => g.Genero).ToList();
         }
+        
     }
 }

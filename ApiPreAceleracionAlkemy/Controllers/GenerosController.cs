@@ -55,7 +55,15 @@ namespace ApiPreAceleracionAlkemy.Controllers
             editarGenero.Nombre = generoPutViewModel.Nombre;
             editarGenero.Imagen = generoPutViewModel.Imagen;
 
-            _generoRepository.UpdateEntity(editarGenero);
+            try
+            {
+                _generoRepository.UpdateEntity(editarGenero);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
             
             return Ok(editarGenero);
         }
@@ -68,7 +76,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 return NotFound($"el genero con ID {id} no existe");
             }
-            _generoRepository.DeleteEntity(id);
+            try
+            {
+                _generoRepository.DeleteEntity(id);
+            }
+            catch (Exception)
+            {
+
+               return BadRequest();
+            }
+            
             return Ok($"El genero {generoDelete.Nombre} ha sido eliminado correctamente.");
         }
 

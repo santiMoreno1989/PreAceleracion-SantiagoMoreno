@@ -33,7 +33,6 @@ namespace ApiPreAceleracionAlkemy.Controllers
         
         [HttpPost]
         [Route("register")]
-        //Se utilizo un fromBody ya que con el ViewModel Solicitaba los datos como query //
         public async  Task<IActionResult> RegisterUser([FromBody]RegisterRequestModel model)
         {
             var userExist = await _userManager.FindByNameAsync(model.Username);

@@ -27,21 +27,35 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [Route("movies")]
         [AllowAnonymous]
         // TODO : Falta Query Orden ASC & DESC //
-        public IActionResult Get(string name,int genre)
+        public IActionResult Get(string name,int genre, string order)
         {
             var peliculas = _peliculaRepository.GetPeliculas();
-
+            string ASC = "ASC";
+            string DESC = "DESC";
             if (!string.IsNullOrEmpty(name))
-            {
-                peliculas = (from b in peliculas where b.Titulo == name
-                             select b).ToList();
-            }
+                {
+                    peliculas = (from b in peliculas where b.Titulo == name
+                                select b).ToList();
+                }
             
             if(genre != 0)
-            {
-                peliculas = peliculas.Where(x => x.Genero.FirstOrDefault(z => z.Id == genre) != null).ToList();
-             
-            }
+                {
+                    peliculas = peliculas.Where(x => x.Genero.FirstOrDefault(z => z.Id == genre) != null).ToList();
+                }
+           
+             if (order == ASC)
+                {
+                    peliculas = (from A in peliculas
+                                 orderby A.Titulo ascending
+                                 select A).ToList();
+                }
+
+            if (order == DESC)
+                {
+                    peliculas = (from D in peliculas orderby D.Titulo descending select D).ToList();
+                }
+
+
             if (!peliculas.Any()) return NoContent();
 
             return Ok(peliculas);
@@ -56,8 +70,17 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 FechaCreacion = peliculaViewModel.FechaCreacion,
                 Calificacion = peliculaViewModel.Calificacion
             };
-
+            try
+            {
                 _peliculaRepository.AddEntity(pelicula);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+                
         
             return Ok(pelicula);
         }
@@ -74,7 +97,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
             movie.Titulo = peliculaViewModel.Titulo;
             movie.Calificacion = peliculaViewModel.Calificacion;
 
-            _peliculaRepository.UpdateEntity(movie);
+            try
+            {
+                _peliculaRepository.UpdateEntity(movie);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
 
             return Ok(movie);
         }
@@ -87,7 +119,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 return NotFound($"La pelicula con ID {id}no existe");
             }
-            _peliculaRepository.DeleteEntity(id);
+            try
+            {
+                _peliculaRepository.DeleteEntity(id);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
             return Ok($"La pelicula {peliculas.Titulo} ha sido borrada correctamente");
         }
     }

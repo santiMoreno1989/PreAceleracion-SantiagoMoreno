@@ -2,7 +2,6 @@
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
-using ApiPreAceleracionAlkemy.ViewModel.PersonajeView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,21 +24,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
             _personajeRepository = personajeRepository;
         }
 
-        [HttpGet]
-        [Route("characters")]
-        public IActionResult GetList(PersonajeGetViewModel personajeGetViewModel)
-        {
-            var ListaPersonajes = _personajeRepository.GetPersonaje(personajeGetViewModel.Id);
-            ListaPersonajes.Nombre = personajeGetViewModel.name;
-            ListaPersonajes.Imagen = personajeGetViewModel.Imagen;
-            
-            return Ok(ListaPersonajes);
-        }
 
         [HttpGet]
-        [Route("character")]
         [AllowAnonymous]
-        public IActionResult Get(string name, short age, int movies)
+        [Route("characters")]
+        public  IActionResult Get(string name, short age, int movies)
         {
             var personaje = _personajeRepository.GetPersonajes();
 
@@ -47,17 +36,17 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 personaje = personaje.Where(n => n.Nombre == name).ToList();
             }
-            if(age != 0)
+            if (age != 0)
             {
                 personaje = personaje.Where(e => e.Edad == age).ToList();
             }
-            if(movies != 0)
+            if (movies != 0)
             {
-                personaje = personaje.Where(p => p.Peliculas.FirstOrDefault(x => x.Id == movies)!= null).ToList();
+                personaje = personaje.Where(p => p.Peliculas.FirstOrDefault(x => x.Id == movies) != null).ToList();
             }
 
-            if (!personaje.Any()) return NoContent();
-            
+           
+;
             return Ok(personaje);
         }
 
@@ -72,7 +61,17 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 Peso = personajeViewModel.Peso,
                 Historia = personajeViewModel.Historia
             };
-            _personajeRepository.AddEntity(personaje);
+            try
+            {
+               _personajeRepository.AddEntity(personaje);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+               
+            }
+            
             return Ok(personaje);
         }
 
@@ -91,7 +90,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
             personajeEdit.Peso = personajeViewModel.Peso;
             personajeEdit.Historia = personajeViewModel.Historia;
 
-            _personajeRepository.UpdateEntity(personajeEdit);
+            try
+            {
+                _personajeRepository.UpdateEntity(personajeEdit);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
             
             return Ok(personajeEdit);
         }
@@ -107,7 +115,16 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 return NotFound($"El personaje con id {id} no exite.");
             }
-            _personajeRepository.DeleteEntity(id);
+            try
+            {
+                _personajeRepository.DeleteEntity(id);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            
             return Ok($"El personaje {internalpersonaje.Nombre} fue eliminado correctamente.");
         }
     }
