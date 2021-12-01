@@ -2,6 +2,7 @@
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
+using ApiPreAceleracionAlkemy.ViewModel.PeliculaView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,19 +18,37 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [Authorize(Roles = "Admin,User")]
     public class PeliculasController : ControllerBase
     {
-        private readonly IPeliculaRepository _peliculaRepository;
-        public PeliculasController(IPeliculaRepository peliculaRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public PeliculasController(IUnitOfWork unitOfWork)
         {
-            _peliculaRepository = peliculaRepository;
+            _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetList(int Id, string nombre, int IdGenero)
+        {
+            List <Pelicula> filtroPelis = _unitOfWork.Pelicula.GetPeliculas();
+            var model = new List<PeliculasGetViewModel>();
+            foreach (var item in filtroPelis)
+            {
+                model.Add(new PeliculasGetViewModel
+                {
+                    Titulo = item.Titulo,
+                    Imagen = item.Imagen,
+                    FechaCreacion = item.FechaCreacion
+            });
+            }
+            
+            return Ok(model);
         }
 
         [HttpGet]
         [Route("movies")]
         [AllowAnonymous]
-        // TODO : Falta Query Orden ASC & DESC //
         public IActionResult Get(string name,int genre, string order)
         {
-            var peliculas = _peliculaRepository.GetPeliculas();
+            var peliculas = _unitOfWork.Pelicula.GetPeliculas();
             string ASC = "ASC";
             string DESC = "DESC";
             if (!string.IsNullOrEmpty(name))
@@ -48,7 +67,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
                     peliculas = (from A in peliculas
                                  orderby A.Titulo ascending
                                  select A).ToList();
-                }
+            }
 
             if (order == DESC)
                 {
@@ -72,7 +91,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
             };
             try
             {
-                _peliculaRepository.AddEntity(pelicula);
+                _unitOfWork.Pelicula.AddEntity(pelicula);
+                _unitOfWork.Complete();
             }
             catch (Exception)
             {
@@ -87,7 +107,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpPut]
         public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
-            var  movie = _peliculaRepository.GetPelicula(peliculaViewModel.Id);
+            var  movie = _unitOfWork.Pelicula.GetPelicula(peliculaViewModel.Id);
 
             if(movie == null)
             {
@@ -99,7 +119,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                _peliculaRepository.UpdateEntity(movie);
+                _unitOfWork.Pelicula.UpdateEntity(movie);
+                _unitOfWork.Complete();
             }
             catch (Exception)
             {
@@ -114,14 +135,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
-            var peliculas = _peliculaRepository.GetPelicula(id);
+            var peliculas = _unitOfWork.Pelicula.GetPelicula(id);
             if (peliculas == null)
             {
                 return NotFound($"La pelicula con ID {id}no existe");
             }
             try
             {
-                _peliculaRepository.DeleteEntity(id);
+                _unitOfWork.Pelicula.DeleteEntity(id);
             }
             catch (Exception)
             {

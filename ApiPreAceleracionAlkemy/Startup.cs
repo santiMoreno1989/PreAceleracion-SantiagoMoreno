@@ -112,6 +112,7 @@ namespace ApiPreAceleracionAlkemy
             services.AddScoped<IPeliculaRepository, PeliculaRepository>();
             services.AddScoped<IGeneroRepository, GeneroRepository>();
             services.AddSingleton<IMailService, MailService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSendGrid(k => k.ApiKey = "...Ingrese SendGrid Key Aqui...");
         }

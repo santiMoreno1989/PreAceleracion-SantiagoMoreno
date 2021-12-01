@@ -17,17 +17,51 @@ namespace ApiPreAceleracionAlkemy.Controllers
     public class GenerosController : ControllerBase
     {
 
-        private readonly IGeneroRepository _generoRepository;
-        public GenerosController(IGeneroRepository generoRepository)
+       
+        private readonly IUnitOfWork _unitOfWork;
+        public GenerosController(IUnitOfWork unitOfWork)
         {
-            _generoRepository = generoRepository;
+           
+            _unitOfWork = unitOfWork;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Prueba")]
+        public   IActionResult TryGet()
+        {
+            var modelGeneros = _unitOfWork.Genero.GetAllEntities();
+            var userVM = new List<GeneroGetViewModel>();
+            foreach (var item in modelGeneros)
+            {
+                userVM.Add(
+                    new GeneroGetViewModel
+                    {
+                        Nombre = item.Nombre,
+                        Imagen = item.Imagen
+                    }
+                    );
+            }
+            return Ok(userVM);
         }
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Get()
+        public IActionResult Get(int id)
         {
-            var genero = _generoRepository.GetGeneros();
-
+            if (id == 0)
+            {
+                return NotFound(); 
+            }
+            var genero = _unitOfWork.Genero.GetGenero(id);
+            if (genero == null)
+            {
+                return NotFound(new
+                {
+                    Status = "Error",
+                    Messege = "No se encontro ningun genero"
+                });
+            } 
+           
             return Ok(genero);
         }
 
@@ -39,30 +73,62 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 Nombre = generoPostViewModel.Nombre,
                 Imagen = generoPostViewModel.Imagen
             };
-            _generoRepository.AddEntity(genero);
-            return Ok(genero);
-        }
-        [HttpPut]
-        public IActionResult Put(GeneroPutViewModel generoPutViewModel)
-        {
-            var editarGenero = _generoRepository.GetGenero(generoPutViewModel.Id);
-
-            if (editarGenero == null)
-            {
-                return NotFound("El genero  no existe");
-            }
-
-            editarGenero.Nombre = generoPutViewModel.Nombre;
-            editarGenero.Imagen = generoPutViewModel.Imagen;
 
             try
             {
-                _generoRepository.UpdateEntity(editarGenero);
+                if (ModelState.IsValid)
+                {
+                    _unitOfWork.Genero.AddEntity(genero);
+                    _unitOfWork.Complete();
+                }
             }
             catch (Exception)
             {
 
                 return BadRequest();
+            }
+            
+            
+            return Ok(genero);
+        }
+        [HttpPut]
+        [AllowAnonymous]
+        public IActionResult Put(GeneroPutViewModel generoPutViewModel)
+        {
+            var editarGenero = _unitOfWork.Genero.GetGenero(generoPutViewModel.Id);
+
+            if (editarGenero == null)
+            {
+                return NotFound(new
+                {
+                    status = "Error",
+                    Messege = $"El Genero {generoPutViewModel.Nombre} no existe en la base de datos."
+                });
+            }
+
+
+
+            try
+            {
+                editarGenero.Nombre = generoPutViewModel.Nombre;
+                editarGenero.Imagen = generoPutViewModel.Imagen;
+                if (ModelState.IsValid)
+                {
+                    _unitOfWork.Genero.UpdateEntity(editarGenero);
+                    _unitOfWork.Complete();
+                }
+
+            }
+            catch (Exception)
+            {
+                if (editarGenero == null)
+                {
+                    return BadRequest(new
+                    {
+                        status = "Error",
+                        Messege = $"El Genero {generoPutViewModel.Nombre} no se pudo editar correctamente."
+                    });
+                }
             }
             
             return Ok(editarGenero);
@@ -71,14 +137,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
-           var generoDelete = _generoRepository.GetGenero(id);
+           var generoDelete = _unitOfWork.Genero.GetGenero(id);
             if(generoDelete == null)
             {
                 return NotFound($"el genero con ID {id} no existe");
             }
             try
             {
-                _generoRepository.DeleteEntity(id);
+                _unitOfWork.Genero.DeleteEntity(id);
             }
             catch (Exception)
             {

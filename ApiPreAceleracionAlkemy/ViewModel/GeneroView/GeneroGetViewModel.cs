@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
 {
-    public class GeneroPutViewModel
+    public class GeneroGetViewModel
     {
-        public int Id { get; set; }
         [Required]
-        [MaxLength(90,ErrorMessage ="Ha excedido el numero maximo de 90 caracteres.")]
+        [MaxLength(100, ErrorMessage = "Ha excedido el maximo de 100 caracteres")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; set; }
+
+        [Display(Name = "Imagen")]
         public byte[] Imagen { get; set; }
     }
 }

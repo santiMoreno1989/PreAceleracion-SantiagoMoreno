@@ -18,11 +18,12 @@ namespace ApiPreAceleracionAlkemy.Controllers
     
     public class PersonajesController : ControllerBase
     {
-        private readonly IPersonajeRepository _personajeRepository;
-        public PersonajesController(IPersonajeRepository personajeRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public PersonajesController(IUnitOfWork unitOfWork)
         {
-            _personajeRepository = personajeRepository;
+            _unitOfWork = unitOfWork;
         }
+
 
 
         [HttpGet]
@@ -30,11 +31,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [Route("characters")]
         public  IActionResult Get(string name, short age, int movies)
         {
-            var personaje = _personajeRepository.GetPersonajes();
+            var personaje = _unitOfWork.Personaje.GetPersonajes();
 
             if (!string.IsNullOrEmpty(name))
             {
-                personaje = personaje.Where(n => n.Nombre == name).ToList();
+                personaje = personaje.Where(n => n.Nombre  == name).ToList();
             }
             if (age != 0)
             {
@@ -63,7 +64,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
             };
             try
             {
-               _personajeRepository.AddEntity(personaje);
+                _unitOfWork.Personaje.AddEntity(personaje);
+                _unitOfWork.Complete();
             }
             catch (Exception)
             {
@@ -78,7 +80,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpPut]
         public  IActionResult Put(PesonajePutViewModel personajeViewModel)
         {
-            var personajeEdit = _personajeRepository.GetPersonaje(personajeViewModel.Id);
+            var personajeEdit = _unitOfWork.Personaje.GetPersonaje(personajeViewModel.Id);
             
             if (personajeEdit == null)
             {
@@ -92,7 +94,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                _personajeRepository.UpdateEntity(personajeEdit);
+                _unitOfWork.Personaje.UpdateEntity(personajeEdit);
+                _unitOfWork.Complete();
             }
             catch (Exception)
             {
@@ -109,7 +112,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         public IActionResult Delete(int id)
         {
 
-            var internalpersonaje = _personajeRepository.GetPersonaje(id);
+            var internalpersonaje = _unitOfWork.Personaje.GetPersonaje(id);
             
             if(internalpersonaje == null)
             {
@@ -117,7 +120,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             }
             try
             {
-                _personajeRepository.DeleteEntity(id);
+                _unitOfWork.Personaje.DeleteEntity(id);
             }
             catch (Exception)
             {
