@@ -15,5 +15,7 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
 
         [Display(Name = "Imagen")]
         public byte[] Imagen { get; set; }
+
+        public DateTime? TimeStams { get; set; }
     }
 }

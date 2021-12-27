@@ -11,6 +11,6 @@ namespace ApiPreAceleracionAlkemy.Repositories
         TEntity GetEntity(int id);
         TEntity AddEntity(TEntity entity);
         TEntity UpdateEntity(TEntity entity);
-        void DeleteEntity(int id);
+        TEntity DeleteEntity(int id);
     }
 }

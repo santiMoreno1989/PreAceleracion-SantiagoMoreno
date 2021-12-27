@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Data
 {
+
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -19,4 +20,5 @@ namespace ApiPreAceleracionAlkemy.Data
         public DbSet<Genero> Generos { get; set; }
       
     }
+
 }

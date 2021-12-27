@@ -43,11 +43,12 @@ namespace ApiPreAceleracionAlkemy.Repositories
             return entity;
 
         }
-        public void DeleteEntity(int id)
+        public virtual TEntity DeleteEntity(int id)
         {
             var delete = _dbContext.Find<TEntity>(id);
             _dbContext.Remove(delete);
             _dbContext.SaveChanges();
+            return delete;
         }
     }
 }

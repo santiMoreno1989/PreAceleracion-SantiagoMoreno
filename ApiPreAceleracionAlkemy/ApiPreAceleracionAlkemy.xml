@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiPreAceleracionAlkemy</name>
+    </assembly>
+    <members>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.TryGet">
+            <summary>
+            Retorna un listado de Generos
+            </summary>
+            <response code="200">Retorna una lista de Generos</response>
+            <response code="404">No existen generos</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Post(ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel)">
+            <summary>
+            Crear un Genero
+            </summary>
+            <param name="generoPostViewModel"></param>
+            <remarks>
+              **Sample request** :
+            
+            
+                    POST
+                    {
+                        "nombre": "Nuevo",
+                        "imagen": "NotImage",
+                        "timeStams": "2021-12-20T01:56:35.181"
+                    }
+            
+            </remarks>
+            <response code="201">Crea un Genero</response>
+            <response code="400">No se pudo crear el genero</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Put(ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPutViewModel)">
+            <summary>
+            Edita un Genero
+            </summary>
+            <param name="generoPutViewModel"></param>
+            <remarks>
+              **Sample request** :
+            
+            
+                    PUT
+                    {
+                        "nombre": "Nuevo",
+                        "imagen": "NotImage",
+                        "timeStams": "2021-12-20T01:56:35.181"
+                    }
+            
+            </remarks>
+            <response code="200">Se edito el genero correctamente.</response>
+            <response code="400">No se pudo editar el genero</response>
+            <response code="404">El genero no existe</response>
+        </member>
+    </members>
+</doc>

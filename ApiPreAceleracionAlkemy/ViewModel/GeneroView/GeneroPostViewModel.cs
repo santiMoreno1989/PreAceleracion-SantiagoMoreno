@@ -11,5 +11,6 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
         [Required]
         public string Nombre { get; set; }
         public byte[] Imagen { get; set; }
+        public DateTime? TimeStams { get; set; }
     }
 }

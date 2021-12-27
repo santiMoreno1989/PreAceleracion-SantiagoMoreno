@@ -30,7 +30,12 @@ namespace ApiPreAceleracionAlkemy.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("TimeStams")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

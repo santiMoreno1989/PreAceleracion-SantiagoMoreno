@@ -17,6 +17,7 @@ namespace ApiPreAceleracionAlkemy.Entities
         
         [Display(Name ="Imagen")]
         public byte[] Imagen { get; set; }
+        public DateTime? TimeStams { get; set; }
         public ICollection<Pelicula> Peliculas { get; set; }
     }
 }

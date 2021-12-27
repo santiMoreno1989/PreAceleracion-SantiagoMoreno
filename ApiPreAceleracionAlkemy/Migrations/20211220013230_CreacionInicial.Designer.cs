@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPreAceleracionAlkemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211102233716_CreacionInicial")]
+    [Migration("20211220013230_CreacionInicial")]
     partial class CreacionInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,12 @@ namespace ApiPreAceleracionAlkemy.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("TimeStams")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -52,9 +57,6 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GeneroId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Imagen")
                         .HasColumnType("varbinary(max)");
 
@@ -62,8 +64,6 @@ namespace ApiPreAceleracionAlkemy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GeneroId");
 
                     b.ToTable("Peliculas");
                 });
@@ -95,6 +95,21 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.ToTable("Personajes");
                 });
 
+            modelBuilder.Entity("GeneroPelicula", b =>
+                {
+                    b.Property<int>("GeneroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeliculasId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GeneroId", "PeliculasId");
+
+                    b.HasIndex("PeliculasId");
+
+                    b.ToTable("GeneroPelicula");
+                });
+
             modelBuilder.Entity("PeliculaPersonaje", b =>
                 {
                     b.Property<int>("PeliculasId")
@@ -110,13 +125,19 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.ToTable("PeliculaPersonaje");
                 });
 
-            modelBuilder.Entity("ApiPreAceleracionAlkemy.Entities.Pelicula", b =>
+            modelBuilder.Entity("GeneroPelicula", b =>
                 {
-                    b.HasOne("ApiPreAceleracionAlkemy.Entities.Genero", "Genero")
-                        .WithMany("Peliculas")
-                        .HasForeignKey("GeneroId");
+                    b.HasOne("ApiPreAceleracionAlkemy.Entities.Genero", null)
+                        .WithMany()
+                        .HasForeignKey("GeneroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Genero");
+                    b.HasOne("ApiPreAceleracionAlkemy.Entities.Pelicula", null)
+                        .WithMany()
+                        .HasForeignKey("PeliculasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PeliculaPersonaje", b =>
@@ -132,11 +153,6 @@ namespace ApiPreAceleracionAlkemy.Migrations
                         .HasForeignKey("PersonajesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ApiPreAceleracionAlkemy.Entities.Genero", b =>
-                {
-                    b.Navigation("Peliculas");
                 });
 #pragma warning restore 612, 618
         }
