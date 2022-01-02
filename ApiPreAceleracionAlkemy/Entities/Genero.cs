@@ -10,12 +10,8 @@ namespace ApiPreAceleracionAlkemy.Entities
     {
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(100,ErrorMessage ="Ha excedido el maximo de 100 caracteres")]
-        [Display(Name ="Nombre")]
         public string Nombre { get; set; }
         
-        [Display(Name ="Imagen")]
         public byte[] Imagen { get; set; }
         public DateTime? TimeStams { get; set; }
         public ICollection<Pelicula> Peliculas { get; set; }

@@ -15,6 +15,10 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
 {
+    /// <summary>
+    /// Servicios para Listar,Guardar,Editar y Eliminar 
+    /// los generos de las peliculas.
+    /// </summary>
     [ApiController]
     [Route(template:"api/[controller]")]
     [Produces("application/json")]
@@ -30,7 +34,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             _unitOfWork = unitOfWork;
         }
         /// <summary>
-        /// Retorna un listado de Generos
+        /// Obtiene todos los generos registrados
         /// </summary>
         /// <response code="200">Retorna una lista de Generos</response>
         /// <response code="404">No existen generos</response>
@@ -61,7 +65,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
             }
             return Ok(userVM.OrderBy(x=> x.Nombre).Select(p=> p.Imagen));
         }
-        [HttpGet]
+        /// <summary>
+        /// Obtiene un Genero de acuerdo a su Id
+        /// </summary>
+        /// <param name="id">Id del Genero</param>
+        /// <returns>Los datos del Genero</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(200,Type =typeof(Genero))]
+        [ProducesResponseType(404,Type =typeof(Genero))]
         [AllowAnonymous]
         public IActionResult Get(int id)
         {
@@ -84,7 +95,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
 
         /// <summary>
-        /// Crear un Genero
+        /// Permite registrar un nuevo genero de pelicula
         /// </summary>
         /// <param name="generoPostViewModel"></param>
         /// <remarks>
@@ -99,13 +110,10 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///         }
         /// 
         /// </remarks>
-        /// <response code="201">Crea un Genero</response>
-        /// <response code="400">No se pudo crear el genero</response>
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(200, Type = typeof(Genero))]
+        [ProducesResponseType(200, Type = typeof(GeneroPostViewModel))]
+        [ProducesResponseType(400, Type = typeof(GeneroPostViewModel))]
 
         public IActionResult Post(GeneroPostViewModel generoPostViewModel)
         {
@@ -135,7 +143,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         /// <summary>
-        /// Edita un Genero
+        /// Permite editar un Genero
         /// </summary>
         /// <param name="generoPutViewModel"></param>
         /// <remarks>
@@ -151,8 +159,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// 
         /// </remarks>
         /// <response code="200">Se edito el genero correctamente.</response>
-        /// <response code="400">No se pudo editar el genero</response>
-        /// <response code="404">El genero no existe</response>
+        /// <response code="400">No se pudo editar el genero.</response>
+        /// <response code="404">El genero no existe.</response>
 
 
         [HttpPut]
@@ -194,8 +202,29 @@ namespace ApiPreAceleracionAlkemy.Controllers
             
             return Ok(editarGenero);
         }
+        /// <summary>
+        /// Permite eliminar un genero
+        /// </summary>
+        /// <param name="id"></param>
+        /// <remarks>
+        ///   **Sample request** :
+        /// 
+        /// 
+        ///         DELETE
+        ///         {
+        ///             "id": "1"
+        ///         }
+        /// 
+        /// </remarks>
+        /// <returns>Datos del genero eliminado</returns>
+        /// <response code="200">El genero se elimino correctamente.</response>
+        /// <reponse code="404">El genero que desea eliminar no existe.</reponse>
+        /// <response code="400">No se pudo eliminar el genero.</response>
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
            var generoDelete = _unitOfWork.Genero.GetGenero(id);

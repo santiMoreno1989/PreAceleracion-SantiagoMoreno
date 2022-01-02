@@ -4,16 +4,29 @@
         <name>ApiPreAceleracionAlkemy</name>
     </assembly>
     <members>
+        <member name="T:ApiPreAceleracionAlkemy.Controllers.GenerosController">
+            <summary>
+            Servicios para Listar,Guardar,Editar y Eliminar 
+            los generos de las peliculas.
+            </summary>
+        </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.TryGet">
             <summary>
-            Retorna un listado de Generos
+            Obtiene todos los generos registrados
             </summary>
             <response code="200">Retorna una lista de Generos</response>
             <response code="404">No existen generos</response>
         </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Get(System.Int32)">
+            <summary>
+            Obtiene un Genero de acuerdo a su Id
+            </summary>
+            <param name="id">Id del Genero</param>
+            <returns>Los datos del Genero</returns>
+        </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Post(ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel)">
             <summary>
-            Crear un Genero
+            Permite registrar un nuevo genero de pelicula
             </summary>
             <param name="generoPostViewModel"></param>
             <remarks>
@@ -28,12 +41,10 @@
                     }
             
             </remarks>
-            <response code="201">Crea un Genero</response>
-            <response code="400">No se pudo crear el genero</response>
         </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Put(ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPutViewModel)">
             <summary>
-            Edita un Genero
+            Permite editar un Genero
             </summary>
             <param name="generoPutViewModel"></param>
             <remarks>
@@ -49,8 +60,48 @@
             
             </remarks>
             <response code="200">Se edito el genero correctamente.</response>
-            <response code="400">No se pudo editar el genero</response>
-            <response code="404">El genero no existe</response>
+            <response code="400">No se pudo editar el genero.</response>
+            <response code="404">El genero no existe.</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Delete(System.Int32)">
+            <summary>
+            Permite eliminar un genero
+            </summary>
+            <param name="id"></param>
+            <remarks>
+              **Sample request** :
+            
+            
+                    DELETE
+                    {
+                        "id": "1"
+                    }
+            
+            </remarks>
+            <returns>Datos del genero eliminado</returns>
+            <response code="200">El genero se elimino correctamente.</response>
+            <reponse code="404">El genero que desea eliminar no existe.</reponse>
+            <response code="400">No se pudo eliminar el genero.</response>
+        </member>
+        <member name="T:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel">
+            <summary>
+            Permite registrar los generos de las peliculas
+            </summary>
+        </member>
+        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.Nombre">
+            <summary>
+            Obtiene o establece el nombre del genero
+            </summary>
+        </member>
+        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.Imagen">
+            <summary>
+            Obtiene o establece la imagen del genero
+            </summary>
+        </member>
+        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.TimeStams">
+            <summary>
+            obtiene o establece la fecha de eliminacion del genero
+            </summary>
         </member>
     </members>
 </doc>
