@@ -23,6 +23,7 @@ namespace ApiPreAceleracionAlkemy.Repositories
         public List<Genero> GetGeneros()
         {
             return DbSet.Include(p => p.Peliculas).ThenInclude(q => q.Personajes).ToList();
+            
         }
         public override Genero DeleteEntity(int id)
         {

@@ -22,7 +22,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [ApiController]
     [Route(template:"api/[controller]")]
     [Produces("application/json")]
-    //[Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "Admin,User")]
     public class GenerosController : ControllerBase
     {
 
@@ -58,12 +58,15 @@ namespace ApiPreAceleracionAlkemy.Controllers
                     new GeneroGetViewModel
                     {
                         Nombre = item.Nombre,
-                        Imagen = item.Imagen,
-                        TimeStams = item.TimeStams
+                        Imagen = item.Imagen
                     }
                     );
             }
-            return Ok(userVM.OrderBy(x=> x.Nombre).Select(p=> p.Imagen));
+            var query = from b in userVM where b.TimeStams==null
+                        select b;
+            
+            
+            return Ok(query);
         }
         /// <summary>
         /// Obtiene un Genero de acuerdo a su Id
@@ -76,10 +79,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [AllowAnonymous]
         public IActionResult Get(int id)
         {
-            if (id == 0)
-            {
-                return NotFound(); 
-            }
+
             var genero = _unitOfWork.Genero.GetGenero(id);
             if (genero == null)
             {
@@ -105,8 +105,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///         POST
         ///         {
         ///             "nombre": "Nuevo",
-        ///             "imagen": "NotImage",
-        ///             "timeStams": "2021-12-20T01:56:35.181"
+        ///             "imagen": "NotImage"
+        ///          
         ///         }
         /// 
         /// </remarks>
@@ -120,8 +120,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             var genero = new Genero
             {
                 Nombre = generoPostViewModel.Nombre,
-                Imagen = generoPostViewModel.Imagen,
-                TimeStams = generoPostViewModel.TimeStams
+                Imagen = generoPostViewModel.Imagen
             };
 
             try
@@ -153,14 +152,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///         PUT
         ///         {
         ///             "nombre": "Nuevo",
-        ///             "imagen": "NotImage",
-        ///             "timeStams": "2021-12-20T01:56:35.181"
+        ///             "imagen": "NotImage"
         ///         }
         /// 
         /// </remarks>
         /// <response code="200">Se edito el genero correctamente.</response>
         /// <response code="400">No se pudo editar el genero.</response>
-        /// <response code="404">El genero no existe.</response>
+        /// <response code="404">No se encontro el genero.</response>
 
 
         [HttpPut]
@@ -184,7 +182,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 editarGenero.Nombre = generoPutViewModel.Nombre;
                 editarGenero.Imagen = generoPutViewModel.Imagen;
-                editarGenero.TimeStams = generoPutViewModel.TimeStams;
+
                 if (ModelState.IsValid)
                 {
                     _unitOfWork.Genero.UpdateEntity(editarGenero);
@@ -205,7 +203,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <summary>
         /// Permite eliminar un genero
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">ID del genero a eliminar</param>
         /// <remarks>
         ///   **Sample request** :
         /// 

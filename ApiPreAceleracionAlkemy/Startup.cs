@@ -129,8 +129,18 @@ namespace ApiPreAceleracionAlkemy
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+                //Habilitar swagger
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiPreAceleracionAlkemy v1"));
+                
+                //indica la ruta para generar la configuración de swagger
+                app.UseSwaggerUI(c =>{
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiPreAceleracionAlkemy v1");
+                    
+                    // Si no deseas que se vea la descripción de los modelos en la parte inferior, 
+                    // porque ya se muestra en el modelo de cada petición agrega este código
+                    c.DefaultModelsExpandDepth(-1);
+                });
             }
 
             app.UseRouting();

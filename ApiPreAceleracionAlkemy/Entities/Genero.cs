@@ -11,9 +11,13 @@ namespace ApiPreAceleracionAlkemy.Entities
         public int Id { get; set; }
 
         public string Nombre { get; set; }
-        
+
         public byte[] Imagen { get; set; }
+
         public DateTime? TimeStams { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
         public ICollection<Pelicula> Peliculas { get; set; }
     }
 }

@@ -36,8 +36,8 @@
                     POST
                     {
                         "nombre": "Nuevo",
-                        "imagen": "NotImage",
-                        "timeStams": "2021-12-20T01:56:35.181"
+                        "imagen": "NotImage"
+                     
                     }
             
             </remarks>
@@ -54,20 +54,19 @@
                     PUT
                     {
                         "nombre": "Nuevo",
-                        "imagen": "NotImage",
-                        "timeStams": "2021-12-20T01:56:35.181"
+                        "imagen": "NotImage"
                     }
             
             </remarks>
             <response code="200">Se edito el genero correctamente.</response>
             <response code="400">No se pudo editar el genero.</response>
-            <response code="404">El genero no existe.</response>
+            <response code="404">No se encontro el genero.</response>
         </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Delete(System.Int32)">
             <summary>
             Permite eliminar un genero
             </summary>
-            <param name="id"></param>
+            <param name="id">ID del genero a eliminar</param>
             <remarks>
               **Sample request** :
             
@@ -83,25 +82,83 @@
             <reponse code="404">El genero que desea eliminar no existe.</reponse>
             <response code="400">No se pudo eliminar el genero.</response>
         </member>
-        <member name="T:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.GetList">
             <summary>
-            Permite registrar los generos de las peliculas
+            Obtiene todas las peliculas registradas
             </summary>
+            <response code="200">Retorna una lista de peliculas</response>
+            <response code="404">No existen peliculas</response>
         </member>
-        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.Nombre">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.Get(System.String,System.Nullable{System.Int32},System.String)">
             <summary>
-            Obtiene o establece el nombre del genero
+            
             </summary>
+            <param name="name">Nombre de la pelicula</param>
+            <param name="genre">Id Genero relacionado</param>
+            <param name="order">Orden de las peliculas</param>
+            <response code="200">Retorna una lista de peliculas</response>
+            <response code="204">No hay contenido</response>
         </member>
-        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.Imagen">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.Post(ApiPreAceleracionAlkemy.ViewModel.PeliculaPostViewModel)">
             <summary>
-            Obtiene o establece la imagen del genero
+            Permite registrar una nueva pelicula
             </summary>
+            <param name="peliculaViewModel"></param>
+            <remarks>
+            
+                **Sample Request** :
+                    
+                        POST
+                        {
+                            "Imagen": "Image.pnj",
+                            "Titulo": "Harry Potter",
+                            "Calificacion":"5"
+                            
+                            
+                        }
+            
+            </remarks>
+            <response code="200">Se Creo la pelicula correctamente.</response>
+            <response code="400">No se pudo crear la pelicula</response>
         </member>
-        <member name="P:ApiPreAceleracionAlkemy.ViewModel.GeneroView.GeneroPostViewModel.TimeStams">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.Put(ApiPreAceleracionAlkemy.ViewModel.PeliculaPutViewModel)">
+             <summary>
+             Permite editar una pelicula
+             </summary>
+             <remarks>
+             
+                  **Sample Request** :
+                         
+                         PUT
+                         {
+                             "Imagen": "imagenPrueba.jpg",
+                             "Titulo":"Comedia",
+                             "Calificacion":"3"
+                         }
+             
+             </remarks>
+             <param name="peliculaViewModel"></param>
+            <response code="200">Se edito la pelicula correctamente.</response> 
+            <response code="400">No se pudo editar la pelicula.</response>
+            <response code="404">No se encontro la pelicula</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.Delete(System.Int32)">
             <summary>
-            obtiene o establece la fecha de eliminacion del genero
+            
             </summary>
+            <remarks>
+                **Sample Request** :
+                        
+                        DELETE 
+                        {
+                            "id":"20"
+                        }
+            
+            </remarks>
+            <param name="id">ID de la pelicula a eliminar</param>
+            <reponse code="200">Se elimino correctamente la pelicula.</reponse>
+            <response code="400">No se pudo eliminar la pelicula.</response>
+            <response code="404">No se encontro la pelicula.</response>
         </member>
     </members>
 </doc>

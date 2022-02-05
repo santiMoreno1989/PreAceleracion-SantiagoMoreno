@@ -4,6 +4,7 @@ using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PeliculaView;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
     
     [ApiController]
     [Route(template:"api/[controller]")]
+    [Produces("application/json")]
     [Authorize(Roles = "Admin,User")]
     public class PeliculasController : ControllerBase
     {
@@ -23,14 +25,23 @@ namespace ApiPreAceleracionAlkemy.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-
+        /// <summary>
+        /// Obtiene todas las peliculas registradas
+        /// </summary>
+        /// <response code="200">Retorna una lista de peliculas</response>
+        /// <response code="404">No existen peliculas</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AllowAnonymous]
-        public IActionResult GetList(int Id, string nombre, int IdGenero)
+        public IActionResult GetList()
         {
-            List <Pelicula> filtroPelis = _unitOfWork.Pelicula.GetPeliculas();
+            List <Pelicula> peliculas = _unitOfWork.Pelicula.GetPeliculas();
+            
+            if (peliculas == null) { return NotFound(); }
+
             var model = new List<PeliculasGetViewModel>();
-            foreach (var item in filtroPelis)
+            foreach (var item in peliculas)
             {
                 model.Add(new PeliculasGetViewModel
                 {
@@ -42,11 +53,20 @@ namespace ApiPreAceleracionAlkemy.Controllers
             
             return Ok(model);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">Nombre de la pelicula</param>
+        /// <param name="genre">Id Genero relacionado</param>
+        /// <param name="order">Orden de las peliculas</param>
+        /// <response code="200">Retorna una lista de peliculas</response>
+        /// <response code="204">No hay contenido</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("movies")]
         [AllowAnonymous]
-        public IActionResult Get(string name,int genre, string order)
+        public IActionResult Get(string name,int? genre, string order)
         {
             var peliculas = _unitOfWork.Pelicula.GetPeliculas();
             string ASC = "ASC";
@@ -57,7 +77,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
                                 select b).ToList();
                 }
             
-            if(genre != 0)
+            if(genre != null)
                 {
                     peliculas = peliculas.Where(x => x.Genero.FirstOrDefault(z => z.Id == genre) != null).ToList();
                 }
@@ -79,14 +99,35 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             return Ok(peliculas);
         }
+        /// <summary>
+        /// Permite registrar una nueva pelicula
+        /// </summary>
+        /// <param name="peliculaViewModel"></param>
+        /// <remarks>
+        /// 
+        ///     **Sample Request** :
+        ///         
+        ///             POST
+        ///             {
+        ///                 "Imagen": "Image.pnj",
+        ///                 "Titulo": "Harry Potter",
+        ///                 "Calificacion":"5"
+        ///                 
+        ///                 
+        ///             }
+        /// 
+        /// </remarks>
+        /// <response code="200">Se Creo la pelicula correctamente.</response>
+        /// <response code="400">No se pudo crear la pelicula</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(PeliculaPostViewModel peliculaViewModel)
         {
             var pelicula = new Pelicula
             {
                 Imagen = peliculaViewModel.Imagen,
                 Titulo = peliculaViewModel.Titulo,
-                FechaCreacion = peliculaViewModel.FechaCreacion,
                 Calificacion = peliculaViewModel.Calificacion
             };
             try
@@ -104,7 +145,30 @@ namespace ApiPreAceleracionAlkemy.Controllers
         
             return Ok(pelicula);
         }
+        /// <summary>
+        /// Permite editar una pelicula
+        /// </summary>
+        /// <remarks>
+        /// 
+        ///      **Sample Request** :
+        ///             
+        ///             PUT
+        ///             {
+        ///                 "Imagen": "imagenPrueba.jpg",
+        ///                 "Titulo":"Comedia",
+        ///                 "Calificacion":"3"
+        ///             }
+        /// 
+        /// </remarks>
+        /// <param name="peliculaViewModel"></param>
+        ///<response code="200">Se edito la pelicula correctamente.</response> 
+        ///<response code="400">No se pudo editar la pelicula.</response>
+        ///<response code="404">No se encontro la pelicula</response>
+
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
             var  movie = _unitOfWork.Pelicula.GetPelicula(peliculaViewModel.Id);
@@ -131,14 +195,35 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             return Ok(movie);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>
+        ///     **Sample Request** :
+        ///             
+        ///             DELETE 
+        ///             {
+        ///                 "id":"20"
+        ///             }
+        /// 
+        /// </remarks>
+        /// <param name="id">ID de la pelicula a eliminar</param>
+        /// <reponse code="200">Se elimino correctamente la pelicula.</reponse>
+        /// <response code="400">No se pudo eliminar la pelicula.</response>
+        /// <response code="404">No se encontro la pelicula.</response>
+
+
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
             var peliculas = _unitOfWork.Pelicula.GetPelicula(id);
             if (peliculas == null)
             {
-                return NotFound($"La pelicula con ID {id}no existe");
+                return NotFound();
             }
             try
             {
@@ -150,7 +235,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
                 return BadRequest();
             }
             
-            return Ok($"La pelicula {peliculas.Titulo} ha sido borrada correctamente");
+            return Ok();
         }
     }
 }
