@@ -86,8 +86,8 @@
             <summary>
             Obtiene todas las peliculas registradas
             </summary>
-            <response code="200">Retorna una lista de peliculas</response>
-            <response code="404">No existen peliculas</response>
+            <response code="200">Se listo con exito las peliculas.</response>
+            <response code="204">No existen peliculas.</response>
         </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.Get(System.String,System.Nullable{System.Int32},System.String)">
             <summary>
@@ -155,10 +155,82 @@
                         }
             
             </remarks>
-            <param name="id">ID de la pelicula a eliminar</param>
+            <param name="id"> ID de la pelicula a eliminar</param>
             <reponse code="200">Se elimino correctamente la pelicula.</reponse>
             <response code="400">No se pudo eliminar la pelicula.</response>
             <response code="404">No se encontro la pelicula.</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Get(System.String,System.Nullable{System.Int16},System.Nullable{System.Int32})">
+            <summary>
+            Lista los Personajes
+            </summary>
+            <param name="name"> Nombre del personaje.</param>
+            <param name="age"> Edad del personaje.</param>
+            <param name="movies"> Pelicula vinculada.</param>
+            <response code="200">Se listo con exito los personajes</response>
+            <response code="204">No existe personajes para listar.</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Post(ApiPreAceleracionAlkemy.ViewModel.PersonajePostViewModel)">
+            <summary>
+             Crea un personaje
+            </summary>
+            <remarks>
+                    **Sample Request** :
+                                
+                            POST
+                            {
+                               "Imagen":"ImagenPrueba.jpge",
+                               "Nombre":"Selena Gomez",
+                               "Edad":"46",
+                               "Peso":"45",
+                               "Historia":"descripcion de su carrera profesional"
+                                
+                            }
+            
+            </remarks>
+            <param name="personajeViewModel"></param>
+            <response code="200">Se creo con exito el Personaje.</response>
+            <response code="400">No se pudo crear el Personaje</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Put(ApiPreAceleracionAlkemy.ViewModel.PesonajePutViewModel)">
+            <summary>
+            Edita un Personaje
+            </summary>
+            <remarks>
+                    **Sample Request** :
+                    
+                            PUT
+                                {
+                                    "Imagen":"EditedImage.png",
+                                    "Nombre":"ExampleName",
+                                    "Edad":"18",
+                                    "Peso":"120",
+                                    "Historia":"descripcion de su carrera profesional editar"
+                            }
+            
+            
+            </remarks>
+            <param name="personajeViewModel"></param>
+            <response code="200">Se edito exitosamente el Personaje.</response>
+            <response code="400">No se pudo editar el Personaje.</response>
+            <response code="404">el Personaje que desea editar no existe.</response>
+        </member>
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Delete(System.Int32)">
+            <summary>
+             Elimina un Personaje
+            </summary>
+            <remarks>
+                    **Sample Request** :
+                            DELETE
+                            {
+                                "id":"1"
+                            }
+            
+            </remarks>
+            <param name="id"> ID del Personaje</param>
+            <response code="200">La solicitud ha tenido éxito</response>
+            <response code="400">El servidor no puede procesar la petición.</response>
+            <response code="404">No Encontrado.</response>
         </member>
     </members>
 </doc>

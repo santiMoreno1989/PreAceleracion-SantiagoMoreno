@@ -28,17 +28,15 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <summary>
         /// Obtiene todas las peliculas registradas
         /// </summary>
-        /// <response code="200">Retorna una lista de peliculas</response>
-        /// <response code="404">No existen peliculas</response>
+        /// <response code="200">Se listo con exito las peliculas.</response>
+        /// <response code="204">No existen peliculas.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [AllowAnonymous]
         public IActionResult GetList()
         {
             List <Pelicula> peliculas = _unitOfWork.Pelicula.GetPeliculas();
-            
-            if (peliculas == null) { return NotFound(); }
 
             var model = new List<PeliculasGetViewModel>();
             foreach (var item in peliculas)
@@ -50,7 +48,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
                     FechaCreacion = item.FechaCreacion
             });
             }
-            
+
+            if (!model.Any()) { return NoContent(); }
+
             return Ok(model);
         }
         /// <summary>
@@ -207,7 +207,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///             }
         /// 
         /// </remarks>
-        /// <param name="id">ID de la pelicula a eliminar</param>
+        /// <param name="id"> ID de la pelicula a eliminar</param>
         /// <reponse code="200">Se elimino correctamente la pelicula.</reponse>
         /// <response code="400">No se pudo eliminar la pelicula.</response>
         /// <response code="404">No se encontro la pelicula.</response>
