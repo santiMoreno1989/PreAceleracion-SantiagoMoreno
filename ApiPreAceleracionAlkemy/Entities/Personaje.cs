@@ -13,6 +13,8 @@ namespace ApiPreAceleracionAlkemy.Entities
         public short Edad { get; set; }
         public int Peso { get; set; }
         public string Historia { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
+        public DateTime? DeletedStamp { get; set; }
         public ICollection<Pelicula> Peliculas { get; set; }
     }
 }

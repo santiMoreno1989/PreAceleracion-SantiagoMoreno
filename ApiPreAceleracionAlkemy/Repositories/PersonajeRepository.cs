@@ -10,9 +10,10 @@ namespace ApiPreAceleracionAlkemy.Repositories
 {
     public class PersonajeRepository : BaseRepository<Personaje, ApplicationDbContext>, IPersonajeRepository
     {
+        private readonly ApplicationDbContext _context;
         public PersonajeRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
-
+            _context = dbContext;
         }
         public Personaje GetPersonaje(int id)
         {
@@ -22,7 +23,19 @@ namespace ApiPreAceleracionAlkemy.Repositories
         {
             return DbSet.Include(p => p.Peliculas).ThenInclude(g => g.Genero).ToList();
         }
-        
+
+        public override Personaje DeleteEntity(int id)
+        {
+            Personaje personaje = _context.Find<Personaje>(id);
+            if (personaje.DeletedStamp == null) 
+            {
+                personaje.DeletedStamp = DateTime.Now;
+                _context.Attach(personaje);
+                _context.Entry(personaje).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            return personaje;
+        }
 
     }
 }

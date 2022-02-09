@@ -17,7 +17,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [ApiController]
     [Route(template:"api/[controller]")]
     [Produces("application/json")]
-    [Authorize(Roles = "Admin,User")]
+    //[Authorize(Roles = "Admin,User")]
     public class PeliculasController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
