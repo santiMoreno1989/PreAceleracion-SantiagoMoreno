@@ -60,7 +60,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             if (!personaje.Any()) {
                 return NoContent();
             }
-;
+
             return Ok(personaje);
         }
 
