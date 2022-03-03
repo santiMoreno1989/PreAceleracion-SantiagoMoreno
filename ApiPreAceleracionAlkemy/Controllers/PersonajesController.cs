@@ -2,6 +2,8 @@
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
+using ApiPreAceleracionAlkemy.ViewModel.PersonajeView;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +22,21 @@ namespace ApiPreAceleracionAlkemy.Controllers
     public class PersonajesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PersonajesController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PersonajesController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("PersonajesList")]
+        public  ActionResult<IEnumerable<PersonajeGetViewModel>> GetList() {
+
+            var personajes = _unitOfWork.Personaje.GetAllEntities();
+            var personajesVm = _mapper.Map<IEnumerable<PersonajeGetViewModel>>(personajes);
+
+            return Ok(personajesVm);
         }
 
         /// <summary>
@@ -91,14 +105,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(PersonajePostViewModel personajeViewModel)
         {
-            var personaje = new Personaje
-            {
-                Imagen = personajeViewModel.Imagen,
-                Nombre = personajeViewModel.Nombre,
-                Edad = personajeViewModel.Edad,
-                Peso = personajeViewModel.Peso,
-                Historia = personajeViewModel.Historia
-            };
+            var personaje = _mapper.Map<Personaje>(personajeViewModel);
+
             try
             {
                 _unitOfWork.Personaje.AddEntity(personaje);
@@ -148,11 +156,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 return NotFound();
             }
-            personajeEdit.Imagen = personajeViewModel.Imagen;
-            personajeEdit.Nombre = personajeViewModel.Nombre;
-            personajeEdit.Edad = personajeViewModel.Edad;
-            personajeEdit.Peso = personajeViewModel.Peso;
-            personajeEdit.Historia = personajeViewModel.Historia;
+
+            _mapper.Map(personajeViewModel, personajeEdit);
 
             try
             {

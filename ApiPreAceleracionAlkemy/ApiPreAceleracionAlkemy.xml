@@ -82,7 +82,7 @@
             <reponse code="404">El genero que desea eliminar no existe.</reponse>
             <response code="400">No se pudo eliminar el genero.</response>
         </member>
-        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.GetList">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PeliculasController.GetPeliculas">
             <summary>
             Obtiene todas las peliculas registradas
             </summary>

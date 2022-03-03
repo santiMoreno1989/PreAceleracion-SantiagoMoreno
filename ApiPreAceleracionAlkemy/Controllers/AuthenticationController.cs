@@ -1,4 +1,5 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
 using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel.AuthView;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 namespace ApiPreAceleracionAlkemy.Controllers
 {
     [Controller]
+    [ServiceFilter(typeof(ActionFilter))]
     [Route(template:"api/[controller]")]
     public class AuthenticationController : ControllerBase
     {

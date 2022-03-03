@@ -3,6 +3,7 @@ using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PeliculaView;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
     public class PeliculasController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PeliculasController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PeliculasController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         /// <summary>
         /// Obtiene todas las peliculas registradas
@@ -31,24 +34,15 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <response code="200">Se listo con exito las peliculas.</response>
         /// <response code="204">No existen peliculas.</response>
         [HttpGet]
+        [Route("PeliculasList")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [AllowAnonymous]
-        public IActionResult GetList()
+        public  ActionResult<IEnumerable<PeliculasGetViewModel>> GetPeliculas()
         {
-            List <Pelicula> peliculas = _unitOfWork.Pelicula.GetPeliculas();
+            var peliculas = _unitOfWork.Pelicula.GetPeliculas();
 
-            var model = new List<PeliculasGetViewModel>();
-            foreach (var item in peliculas)
-            {
-                model.Add(new PeliculasGetViewModel
-                {
-                    Titulo = item.Titulo,
-                    Imagen = item.Imagen,
-                    FechaCreacion = item.FechaCreacion
-            });
-            }
-
+            var model = _mapper.Map<IEnumerable<PeliculasGetViewModel>>(peliculas);
             if (!model.Any()) { return NoContent(); }
 
             return Ok(model);
@@ -66,6 +60,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("movies")]
         [AllowAnonymous]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
+        
         public IActionResult Get(string name,int? genre, string order)
         {
             var peliculas = _unitOfWork.Pelicula.GetPeliculas();
@@ -122,6 +119,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
+
         public IActionResult Post(PeliculaPostViewModel peliculaViewModel)
         {
             var pelicula = new Pelicula
@@ -169,6 +169,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
+
         public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
         {
             var  movie = _unitOfWork.Pelicula.GetPelicula(peliculaViewModel.Id);

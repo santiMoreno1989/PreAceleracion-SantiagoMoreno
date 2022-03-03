@@ -1,6 +1,7 @@
 using ApiPreAceleracionAlkemy.Context;
 using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -121,6 +122,8 @@ namespace ApiPreAceleracionAlkemy
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSendGrid(k => k.ApiKey = "...Ingrese SendGrid Key Aqui...");
+            services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<ActionFilter>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

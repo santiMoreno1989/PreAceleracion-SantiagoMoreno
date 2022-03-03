@@ -42,9 +42,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [AllowAnonymous]
-        
         [Route("Prueba")]
-        public   IActionResult TryGet()
+
+        // ** TODO : APLICAR AUTOMAPPER **//
+
+        public IActionResult TryGet()
         {
             var modelGeneros = _unitOfWork.Genero.GetAllEntities();
             if (modelGeneros == null)
@@ -77,6 +79,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(200,Type =typeof(Genero))]
         [ProducesResponseType(404,Type =typeof(Genero))]
         [AllowAnonymous]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
+
         public IActionResult Get(int id)
         {
 
@@ -114,6 +119,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(GeneroPostViewModel))]
         [ProducesResponseType(400, Type = typeof(GeneroPostViewModel))]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
 
         public IActionResult Post(GeneroPostViewModel generoPostViewModel)
         {
@@ -166,6 +173,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        // ** TODO : APLICAR AUTOMAPPER **//
 
         public IActionResult Put(GeneroPutViewModel generoPutViewModel)
         {
