@@ -43,8 +43,8 @@ namespace ApiPreAceleracionAlkemy.Services
 
         public async Task<IEnumerable<Personaje>> GetAll()
         {
-            var personajes = await _unitOfWork.PersonajeRepository.GetAllEntities();
-            //var personajes = await _personajeRepository.GetAllEntities();
+            //var personajes = await _unitOfWork.PersonajeRepository.GetAllEntities();
+            var personajes = await _personajeRepository.GetAllEntities();
             
             return personajes.ToList();
         }
