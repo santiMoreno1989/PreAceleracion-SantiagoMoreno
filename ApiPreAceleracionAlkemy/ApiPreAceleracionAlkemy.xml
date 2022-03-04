@@ -10,13 +10,6 @@
             los generos de las peliculas.
             </summary>
         </member>
-        <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.TryGet">
-            <summary>
-            Obtiene todos los generos registrados
-            </summary>
-            <response code="200">Retorna una lista de Generos</response>
-            <response code="404">No existen generos</response>
-        </member>
         <member name="M:ApiPreAceleracionAlkemy.Controllers.GenerosController.Get(System.Int32)">
             <summary>
             Obtiene un Genero de acuerdo a su Id
@@ -160,13 +153,14 @@
             <response code="400">No se pudo eliminar la pelicula.</response>
             <response code="404">No se encontro la pelicula.</response>
         </member>
-        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Get(System.String,System.Nullable{System.Int16},System.Nullable{System.Int32})">
+        <member name="M:ApiPreAceleracionAlkemy.Controllers.PersonajesController.Get(System.String,System.String,System.Nullable{System.Int16},System.Nullable{System.Int32})">
             <summary>
             Lista los Personajes
             </summary>
             <param name="name"> Nombre del personaje.</param>
             <param name="age"> Edad del personaje.</param>
             <param name="movies"> Pelicula vinculada.</param>
+            <param name="sortOrder">Variable de ordenacion</param>
             <response code="200">Se listo con exito los personajes</response>
             <response code="204">No existe personajes para listar.</response>
         </member>

@@ -2,28 +2,25 @@ using ApiPreAceleracionAlkemy.Context;
 using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
+using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SendGrid.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy
 {
@@ -120,6 +117,8 @@ namespace ApiPreAceleracionAlkemy
             services.AddScoped<IGeneroRepository, GeneroRepository>();
             services.AddSingleton<IMailService, MailService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IPersonajeService, PersonajeService>();
+            services.AddScoped<IPeliculaService, PeliculaService>();
 
             services.AddSendGrid(k => k.ApiKey = "...Ingrese SendGrid Key Aqui...");
             services.AddAutoMapper(typeof(Startup));

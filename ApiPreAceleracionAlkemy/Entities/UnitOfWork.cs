@@ -10,32 +10,59 @@ namespace ApiPreAceleracionAlkemy.Entities
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        public IGeneroRepository Genero { get; }
-        public IPeliculaRepository Pelicula { get; }
-        public IPersonajeRepository Personaje { get; }
-        public UnitOfWork(ApplicationDbContext context, IGeneroRepository generoRepository, IPeliculaRepository peliculaRepository, IPersonajeRepository personajeRepository)
+        private PersonajeRepository _personajeRepository;
+
+        public UnitOfWork()
         {
-            this._context = context;
-            this.Genero = generoRepository;
-            this.Pelicula = peliculaRepository;
-            this.Personaje = personajeRepository;
-        }
-        public int Complete()
-        {
-            return _context.SaveChanges();
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
 
         }
-        protected virtual void Dispose(bool disposing)
+
+        public UnitOfWork(ApplicationDbContext context)
         {
-            if (disposing)
+            _context = context;
+        }
+
+        public PersonajeRepository PersonajeRepository
+        {
+            get
             {
-                _context.Dispose();
+                if (_personajeRepository == null)
+                {
+
+                    _personajeRepository = new PersonajeRepository(_context);
+                }
+                return _personajeRepository;
             }
         }
+
+
+        //    public IGeneroRepository Genero { get; }
+        //    public IPeliculaRepository Pelicula { get; }
+        //    public IPersonajeRepository _personajeRepository { get; }
+
+        //    public IPersonajeRepository Personaje => throw new NotImplementedException();
+
+        //    public UnitOfWork(ApplicationDbContext context)
+        //    {
+        //        _context = context;
+        //        _personajeRepository = new PersonajeRepository(context);
+        //    }
+
+        //    public async Task CompleteAsync()
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+
+        //    public void Dispose()
+        //    {
+        //        _context.Dispose();
+        //    }
+
+
+
+
+
+
+
     }
 }

@@ -7,10 +7,10 @@ namespace ApiPreAceleracionAlkemy.Repositories
 {
      public interface IBaseRepository<TEntity> where TEntity : class
     {
-        List<TEntity> GetAllEntities();
-        TEntity GetEntity(int id);
-        TEntity AddEntity(TEntity entity);
-        TEntity UpdateEntity(TEntity entity);
+        Task <IEnumerable<TEntity>> GetAllEntities();
+        Task<TEntity> GetEntity(int id);
+        Task<TEntity> AddEntity(TEntity entity);
+        Task<TEntity> UpdateEntity(TEntity entity);
         TEntity DeleteEntity(int id);
     }
 }

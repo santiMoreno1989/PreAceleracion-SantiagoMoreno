@@ -15,16 +15,16 @@ namespace ApiPreAceleracionAlkemy.Repositories
         {
             _context = dbContext;
         }
-        public Personaje GetPersonaje(int id)
+        public async Task<Personaje> GetPersonaje(int id)
         {
-            return DbSet.Include(p => p.Peliculas).FirstOrDefault(x => x.Id == id);
+            return await DbSet.Include(p => p.Peliculas).FirstOrDefaultAsync(x => x.Id == id);
         }
-        public List<Personaje> GetPersonajes()
+        public async Task <IEnumerable<Personaje>> GetPersonajes()
         {
-            return DbSet.Include(p => p.Peliculas).ThenInclude(g => g.Genero).ToList();
+            return await DbSet.Include(p => p.Peliculas).ThenInclude(g => g.Genero).ToListAsync();
         }
 
-        public override Personaje DeleteEntity(int id)
+        public  override Personaje DeleteEntity(int id)
         {
             Personaje personaje = _context.Find<Personaje>(id);
             if (personaje.DeletedStamp == null) 

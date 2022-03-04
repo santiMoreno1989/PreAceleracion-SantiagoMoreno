@@ -27,49 +27,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
     {
 
        
-        private readonly IUnitOfWork _unitOfWork;
-        public GenerosController(IUnitOfWork unitOfWork)
-        {
-           
-            _unitOfWork = unitOfWork;
-        }
-        /// <summary>
-        /// Obtiene todos los generos registrados
-        /// </summary>
-        /// <response code="200">Retorna una lista de Generos</response>
-        /// <response code="404">No existen generos</response>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [AllowAnonymous]
-        [Route("Prueba")]
+        private readonly IGeneroRepository _generoRepository;
 
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public IActionResult TryGet()
+        public GenerosController(IGeneroRepository generoRepository)
         {
-            var modelGeneros = _unitOfWork.Genero.GetAllEntities();
-            if (modelGeneros == null)
-            {
-                return NotFound();
-            }
-            var userVM = new List<GeneroGetViewModel>();
-            foreach (var item in modelGeneros)
-            {
-                userVM.Add(
-                    new GeneroGetViewModel
-                    {
-                        Nombre = item.Nombre,
-                        Imagen = item.Imagen
-                    }
-                    );
-            }
-            var query = from b in userVM where b.TimeStams==null
-                        select b;
-            
-            
-            return Ok(query);
+            _generoRepository = generoRepository;
         }
+
+
         /// <summary>
         /// Obtiene un Genero de acuerdo a su Id
         /// </summary>
@@ -78,14 +43,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200,Type =typeof(Genero))]
         [ProducesResponseType(404,Type =typeof(Genero))]
-        [AllowAnonymous]
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
         public IActionResult Get(int id)
         {
 
-            var genero = _unitOfWork.Genero.GetGenero(id);
+            var genero = _generoRepository.GetGenero(id);
             if (genero == null)
             {
                 return NotFound(new
@@ -134,8 +98,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.Genero.AddEntity(genero);
-                    _unitOfWork.Complete();
+                    _generoRepository.AddEntity(genero);
                 }
             }
             catch (Exception)
@@ -178,7 +141,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         public IActionResult Put(GeneroPutViewModel generoPutViewModel)
         {
-            var editarGenero = _unitOfWork.Genero.GetGenero(generoPutViewModel.Id);
+            var editarGenero = _generoRepository.GetGenero(generoPutViewModel.Id);
 
             if (editarGenero == null)
             {
@@ -194,8 +157,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.Genero.UpdateEntity(editarGenero);
-                    _unitOfWork.Complete();
+                    _generoRepository.UpdateEntity(editarGenero);
                 }
 
             }
@@ -234,14 +196,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
-           var generoDelete = _unitOfWork.Genero.GetGenero(id);
+           var generoDelete = _generoRepository.GetGenero(id);
             if(generoDelete == null)
             {
                 return NotFound($"el genero con ID {id} no existe");
             }
             try
             {
-                _unitOfWork.Genero.DeleteEntity(id);
+                _generoRepository.DeleteEntity(id);
             }
             catch (Exception)
             {

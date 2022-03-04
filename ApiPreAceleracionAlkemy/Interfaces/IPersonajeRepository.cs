@@ -1,12 +1,13 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Repositories
 {
     public interface IPersonajeRepository : IBaseRepository<Personaje>
     {
-        Personaje GetPersonaje(int id);
+        Task <Personaje> GetPersonaje(int id);
         
-        List<Personaje> GetPersonajes();
+        Task<IEnumerable<Personaje>> GetPersonajes();
     }
 }

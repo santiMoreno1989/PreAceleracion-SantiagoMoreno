@@ -1,5 +1,6 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PeliculaView;
@@ -21,11 +22,12 @@ namespace ApiPreAceleracionAlkemy.Controllers
     //[Authorize(Roles = "Admin,User")]
     public class PeliculasController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IMapper _mapper;
-        public PeliculasController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IPeliculaService _peliculaService;
+        public PeliculasController(IPeliculaService peliculaService,IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
+            _peliculaService = peliculaService;
             _mapper = mapper;
         }
         /// <summary>
@@ -38,9 +40,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [AllowAnonymous]
-        public  ActionResult<IEnumerable<PeliculasGetViewModel>> GetPeliculas()
+        public async  Task<ActionResult<IEnumerable<PeliculasGetViewModel>>> GetPeliculas()
         {
-            var peliculas = _unitOfWork.Pelicula.GetPeliculas();
+            var peliculas =await _peliculaService.GetAll();
 
             var model = _mapper.Map<IEnumerable<PeliculasGetViewModel>>(peliculas);
             if (!model.Any()) { return NoContent(); }
@@ -63,9 +65,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
         
-        public IActionResult Get(string name,int? genre, string order)
+        public async Task<IActionResult> Get(string name,int? genre, string order)
         {
-            var peliculas = _unitOfWork.Pelicula.GetPeliculas();
+            var peliculas = await _peliculaService.GetAll();
             string ASC = "ASC";
             string DESC = "DESC";
             if (!string.IsNullOrEmpty(name))
@@ -122,7 +124,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
-        public IActionResult Post(PeliculaPostViewModel peliculaViewModel)
+        public async Task<IActionResult> Post(PeliculaPostViewModel peliculaViewModel)
         {
             var pelicula = new Pelicula
             {
@@ -132,8 +134,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             };
             try
             {
-                _unitOfWork.Pelicula.AddEntity(pelicula);
-                _unitOfWork.Complete();
+              await  _peliculaService.Create(pelicula);
             }
             catch (Exception)
             {
@@ -172,9 +173,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
-        public IActionResult Put(PeliculaPutViewModel peliculaViewModel)
+        public async Task<IActionResult> Put(PeliculaPutViewModel peliculaViewModel)
         {
-            var  movie = _unitOfWork.Pelicula.GetPelicula(peliculaViewModel.Id);
+            var  movie =await _peliculaService.GetById(peliculaViewModel.Id);
 
             if(movie == null)
             {
@@ -186,8 +187,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                _unitOfWork.Pelicula.UpdateEntity(movie);
-                _unitOfWork.Complete();
+               await _peliculaService.Edit(movie);
             }
             catch (Exception)
             {
@@ -223,14 +223,14 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
-            var peliculas = _unitOfWork.Pelicula.GetPelicula(id);
+            var peliculas = _peliculaService.GetById(id);
             if (peliculas == null)
             {
                 return NotFound();
             }
             try
             {
-                _unitOfWork.Pelicula.DeleteEntity(id);
+                _peliculaService.Delete(id);
             }
             catch (Exception)
             {

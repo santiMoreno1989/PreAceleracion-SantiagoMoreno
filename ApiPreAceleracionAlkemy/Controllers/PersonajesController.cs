@@ -1,5 +1,6 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PersonajeView;
@@ -21,19 +22,21 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [Produces("application/json")]
     public class PersonajesController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPersonajeService _personajeService;
         private readonly IMapper _mapper;
-        public PersonajesController(IUnitOfWork unitOfWork, IMapper mapper)
+        public PersonajesController(IMapper mapper, IPersonajeService personajeService)
         {
-            _unitOfWork = unitOfWork;
+            //_unitOfWork = unitOfWork;
             _mapper = mapper;
+            _personajeService = personajeService;
         }
         [HttpGet]
         [AllowAnonymous]
         [Route("PersonajesList")]
-        public  ActionResult<IEnumerable<PersonajeGetViewModel>> GetList() {
+        public async  Task<ActionResult<IEnumerable<PersonajeGetViewModel>>> GetList() {
 
-            var personajes = _unitOfWork.Personaje.GetAllEntities();
+            //var personaje = _unitOfWork.Personaje.GetAllEntities();
+            var personajes = await _personajeService.GetAll();
             var personajesVm = _mapper.Map<IEnumerable<PersonajeGetViewModel>>(personajes);
 
             return Ok(personajesVm);
@@ -45,6 +48,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <param name="name"> Nombre del personaje.</param>
         /// <param name="age"> Edad del personaje.</param>
         /// <param name="movies"> Pelicula vinculada.</param>
+        /// <param name="sortOrder">Variable de ordenacion</param>
         /// <response code="200">Se listo con exito los personajes</response>
         /// <response code="204">No existe personajes para listar.</response>
 
@@ -53,27 +57,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [Route("characters")]
-        public  IActionResult Get(string name, short? age, int? movies)
+        public async  Task<IActionResult> Get(string sortOrder,string name, short? age, int? movies)
         {
-            var personaje = _unitOfWork.Personaje.GetPersonajes();
-            
+            var personaje = await _personajeService.GetCustomsPersonajes(sortOrder,name,age,movies);
 
-            if (!string.IsNullOrEmpty(name))
-            {
-                personaje = personaje.Where(n => n.Nombre  == name).ToList();
-            }
-            if (age != null)
-            {
-                personaje = personaje.Where(e => e.Edad == age).ToList();
-            }
-            if (movies != null)
-            {
-                personaje = personaje.Where(p => p.Peliculas.FirstOrDefault(x => x.Id == movies) != null).ToList();
-            }
-
-            if (!personaje.Any()) {
-                return NoContent();
-            }
+            if (!personaje.Any()) return NotFound();
 
             return Ok(personaje);
         }
@@ -103,14 +91,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(PersonajePostViewModel personajeViewModel)
+        public async Task<ActionResult<Personaje>> Post(PersonajePostViewModel personajeViewModel)
         {
             var personaje = _mapper.Map<Personaje>(personajeViewModel);
 
             try
             {
-                _unitOfWork.Personaje.AddEntity(personaje);
-                _unitOfWork.Complete();
+               await _personajeService.Create(personaje);
             }
             catch (Exception)
             {
@@ -148,9 +135,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public  IActionResult Put(PesonajePutViewModel personajeViewModel)
+        public async Task  <ActionResult<Personaje>> Put(PesonajePutViewModel personajeViewModel)
         {
-            var personajeEdit = _unitOfWork.Personaje.GetPersonaje(personajeViewModel.Id);
+            var personajeEdit = await _personajeService.GetById(personajeViewModel.Id);
             
             if (personajeEdit == null)
             {
@@ -161,8 +148,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                _unitOfWork.Personaje.UpdateEntity(personajeEdit);
-                _unitOfWork.Complete();
+                await _personajeService.Edit(personajeEdit);
             }
             catch (Exception)
             {
@@ -199,7 +185,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         public IActionResult Delete(int id)
         {
 
-            var internalpersonaje = _unitOfWork.Personaje.GetPersonaje(id);
+            var internalpersonaje = _personajeService.GetById(id);
             
             if(internalpersonaje == null)
             {
@@ -207,7 +193,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             }
             try
             {
-                _unitOfWork.Personaje.DeleteEntity(id);
+                _personajeService.Delete(id);
             }
             catch (Exception)
             {

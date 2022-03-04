@@ -20,26 +20,26 @@ namespace ApiPreAceleracionAlkemy.Repositories
         {
             _dbContext = dbContext;
         }
-        public List<TEntity> GetAllEntities()
+        public async Task<IEnumerable<TEntity>> GetAllEntities()
         {
-            return _dbContext.Set<TEntity>().ToList();
+            return await _dbContext.Set<TEntity>().ToListAsync();
         }
-        public TEntity GetEntity(int id)
+        public async Task<TEntity> GetEntity(int id)
         {
-            return _dbContext.Set<TEntity>().Find(id);
+            return await _dbContext.Set<TEntity>().FindAsync(id);
 
         }
-        public TEntity AddEntity(TEntity entity)
+        public async Task<TEntity> AddEntity(TEntity entity)
         {
             _dbContext.Set<TEntity>().Add(entity);
-            _dbContext.SaveChanges();
+           await _dbContext.SaveChangesAsync();
             return entity;
         }
-        public TEntity UpdateEntity(TEntity entity)
+        public async Task<TEntity> UpdateEntity(TEntity entity)
         {
             _dbContext.Attach(entity);
             _dbContext.Entry(entity).State = EntityState.Modified;
-            _dbContext.SaveChanges();
+           await _dbContext.SaveChangesAsync();
             return entity;
 
         }

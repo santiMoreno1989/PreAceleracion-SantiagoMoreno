@@ -1,6 +1,7 @@
 ﻿using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,23 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [TypeFilter(typeof(ExceptionManagerFilter))]
     public class ValuesController : ControllerBase
     {
-        public ValuesController()
+        private readonly IConfiguration _configuration;
+        public ValuesController(IConfiguration configuration)
         {
-
+            _configuration = configuration;
         }
         [HttpGet]
-        public ActionResult GetValuesExceptions() {
+        public ActionResult GetValues() {
 
-            var file = new List<IFormFile>();
-                    throw new Exception("Hola soy un error");
-                    
+            
+            var title = _configuration["Position:Name"];
+            var name = _configuration["Position:Name"];
+            return Ok(new
+            {
+                titulo = title,
+                nombre = name
 
-            return Ok(file);
+            }); 
         }
     }
 }
