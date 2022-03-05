@@ -11,13 +11,7 @@ namespace ApiPreAceleracionAlkemy.Services
     
     public class PersonajeService : IPersonajeService
     {
-        private readonly UnitOfWork _unitOfWork;
         private readonly IPersonajeRepository _personajeRepository;
-
-        public PersonajeService(UnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
 
         public PersonajeService(IPersonajeRepository personajeRepository)
         {
@@ -26,24 +20,23 @@ namespace ApiPreAceleracionAlkemy.Services
 
         public async Task<Personaje> Create(Personaje personaje)
         {
-            var Personje = await _unitOfWork.PersonajeRepository.AddEntity(personaje);
+            var Personje = await _personajeRepository.AddEntity(personaje);
             return Personje;
         }
 
         public void Delete(int id)
         {
-            _unitOfWork.PersonajeRepository.DeleteEntity(id);
+            _personajeRepository.DeleteEntity(id);
         }
 
         public async Task<Personaje> Edit(Personaje personaje)
         {
-            var personje = await _unitOfWork.PersonajeRepository.UpdateEntity(personaje);
-            return personaje; 
+            var personje = await _personajeRepository.UpdateEntity(personaje);
+            return personje; 
         }
 
         public async Task<IEnumerable<Personaje>> GetAll()
         {
-            //var personajes = await _unitOfWork.PersonajeRepository.GetAllEntities();
             var personajes = await _personajeRepository.GetAllEntities();
             
             return personajes.ToList();
@@ -51,7 +44,7 @@ namespace ApiPreAceleracionAlkemy.Services
 
         public async Task<Personaje> GetById(int id)
         {
-            var personaje = await _unitOfWork.PersonajeRepository.GetEntity(id);
+            var personaje = await _personajeRepository.GetEntity(id);
             return personaje;
         }
 

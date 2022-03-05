@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime.Internal;
 using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using Microsoft.AspNetCore.Authorization;
@@ -22,16 +23,24 @@ namespace ApiPreAceleracionAlkemy.Controllers
     [ApiController]
     [Route(template:"api/[controller]")]
     [Produces("application/json")]
-    [Authorize(Roles = "Admin,User")]
+    //[Authorize(Roles = "Admin,User")]
     public class GenerosController : ControllerBase
     {
 
        
-        private readonly IGeneroRepository _generoRepository;
+        private readonly IGeneroService _generoService;
 
-        public GenerosController(IGeneroRepository generoRepository)
+        public GenerosController(IGeneroService generoService)
         {
-            _generoRepository = generoRepository;
+            _generoService = generoService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Genero>>> GetGeneros() {
+
+            var generos =await _generoService.GetAll();
+
+            return Ok(generos);
         }
 
 
@@ -46,10 +55,10 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
 
-            var genero = _generoRepository.GetGenero(id);
+            var genero = await _generoService.GetById(id);
             if (genero == null)
             {
                 return NotFound(new
@@ -86,7 +95,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
-        public IActionResult Post(GeneroPostViewModel generoPostViewModel)
+        public async Task<IActionResult> Post(GeneroPostViewModel generoPostViewModel)
         {
             var genero = new Genero
             {
@@ -96,10 +105,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                if (ModelState.IsValid)
-                {
-                    _generoRepository.AddEntity(genero);
-                }
+                  await  _generoService.Create(genero);
+                
             }
             catch (Exception)
             {
@@ -139,9 +146,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
         // ** TODO : APLICAR AUTOMAPPER **//
 
-        public IActionResult Put(GeneroPutViewModel generoPutViewModel)
+        public async Task<IActionResult> Put(GeneroPutViewModel generoPutViewModel)
         {
-            var editarGenero = _generoRepository.GetGenero(generoPutViewModel.Id);
+            var editarGenero = await _generoService.GetById(generoPutViewModel.Id);
 
             if (editarGenero == null)
             {
@@ -157,7 +164,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    _generoRepository.UpdateEntity(editarGenero);
+                  await  _generoService.Edit(editarGenero);
                 }
 
             }
@@ -196,19 +203,19 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(int id)
         {
-           var generoDelete = _generoRepository.GetGenero(id);
+           var generoDelete = _generoService.GetById(id);
             if(generoDelete == null)
             {
                 return NotFound($"el genero con ID {id} no existe");
             }
             try
             {
-                _generoRepository.DeleteEntity(id);
+                _generoService.Delete(id);
             }
             catch (Exception)
             {
 
-               return BadRequest();
+               return BadRequest("El genero que intenta borrar ya ha sido eliminado");
             }
             
             return Ok();

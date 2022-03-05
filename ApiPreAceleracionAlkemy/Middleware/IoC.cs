@@ -20,9 +20,9 @@ namespace ApiPreAceleracionAlkemy.Middleware
             services.AddScoped<IPeliculaRepository, PeliculaRepository>();
             services.AddScoped<IGeneroRepository, GeneroRepository>();
             services.AddSingleton<IMailService, MailService>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IPersonajeService, PersonajeService>();
             services.AddScoped<IPeliculaService, PeliculaService>();
+            services.AddScoped<IGeneroService, GeneroService>();
             services.AddSendGrid(k => k.ApiKey = "...Ingrese SendGrid Key Aqui...");
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ActionFilter>();
