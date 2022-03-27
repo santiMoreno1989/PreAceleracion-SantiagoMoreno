@@ -6,13 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Interfaces
 {
-   public interface IPeliculaService
+    public interface IPeliculaService : IRepository<Pelicula>
     {
-        Task<IEnumerable<Pelicula>> GetAll();
-        Task<Pelicula> GetById(int id);
-        Task<Pelicula> Create(Pelicula pelicula);
-        Task<Pelicula> Edit(Pelicula pelicula);
-
-        void Delete(int id);
     }
 }

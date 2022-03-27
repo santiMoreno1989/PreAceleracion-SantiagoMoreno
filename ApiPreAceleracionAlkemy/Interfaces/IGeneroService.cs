@@ -6,13 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Interfaces
 {
-   public interface IGeneroService
+    public interface IGeneroService : IRepository<Genero>
     {
-        Task<IEnumerable<Genero>> GetAll();
-        Task<Genero> GetById(int id);
-        Task<Genero> Create(Genero genero);
-        Task<Genero> Edit(Genero genero);
-
-        void Delete(int id);
     }
 }

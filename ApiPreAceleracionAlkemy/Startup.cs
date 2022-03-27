@@ -6,6 +6,7 @@ using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Middleware;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.Services;
+using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,6 +78,7 @@ namespace ApiPreAceleracionAlkemy
            
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers();
             services.AddSingleton(Configuration);
             services.AddSwaggerGen(c =>
             {
@@ -114,6 +116,7 @@ namespace ApiPreAceleracionAlkemy
                 });
 
             IoC.AddDependency(services);
+            services.Configure<PositionOptions>(Configuration.GetSection("Position"));
 
 
         }

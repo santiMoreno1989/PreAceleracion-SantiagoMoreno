@@ -1,17 +1,11 @@
-﻿using Amazon.Runtime.Internal;
-using ApiPreAceleracionAlkemy.Data;
-using ApiPreAceleracionAlkemy.Entities;
+﻿using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Interfaces;
-using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
@@ -27,7 +21,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
     public class GenerosController : ControllerBase
     {
 
-       
+
         private readonly IGeneroService _generoService;
 
         public GenerosController(IGeneroService generoService)
@@ -38,9 +32,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genero>>> GetGeneros() {
 
-            var generos =await _generoService.GetAll();
-
-            return Ok(generos);
+            return Ok(await _generoService.GetAll());
         }
 
 
@@ -105,7 +97,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                  await  _generoService.Create(genero);
+                  await  _generoService.Add(genero);
                 
             }
             catch (Exception)
@@ -164,7 +156,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
                 if (ModelState.IsValid)
                 {
-                  await  _generoService.Edit(editarGenero);
+                  await  _generoService.Update(editarGenero);
                 }
 
             }
@@ -201,25 +193,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(int id)
+        public async  Task<IActionResult> Delete(int id)
         {
-           var generoDelete = _generoService.GetById(id);
-            if(generoDelete == null)
-            {
-                return NotFound($"el genero con ID {id} no existe");
-            }
-            try
-            {
-                _generoService.Delete(id);
-            }
-            catch (Exception)
-            {
-
-               return BadRequest("El genero que intenta borrar ya ha sido eliminado");
-            }
+            await  _generoService.Delete(id);
             
-            return Ok();
+            return Ok("Se elimino correctamente el genero   ");
         }
-
     }
 }

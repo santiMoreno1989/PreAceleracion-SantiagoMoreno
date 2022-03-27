@@ -134,7 +134,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
             };
             try
             {
-              await  _peliculaService.Create(pelicula);
+              await  _peliculaService.Add(pelicula);
             }
             catch (Exception)
             {
@@ -187,7 +187,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-               await _peliculaService.Edit(movie);
+               await _peliculaService.Update(movie);
             }
             catch (Exception)
             {
@@ -221,24 +221,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var peliculas = _peliculaService.GetById(id);
-            if (peliculas == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                _peliculaService.Delete(id);
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
+            await _peliculaService.Delete(id);
             
-            return Ok();
+            return Ok("Se elimino la pelicula correctamente.");
         }
     }
 }

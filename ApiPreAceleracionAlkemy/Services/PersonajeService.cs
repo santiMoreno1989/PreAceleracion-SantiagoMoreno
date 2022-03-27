@@ -8,82 +8,39 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Services
 {
-    
+
     public class PersonajeService : IPersonajeService
     {
-        private readonly IPersonajeRepository _personajeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PersonajeService(IPersonajeRepository personajeRepository)
+        public PersonajeService(IUnitOfWork unitOfWork)
         {
-            _personajeRepository = personajeRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Personaje> Create(Personaje personaje)
+        public async Task<Personaje> Add(Personaje entity)
         {
-            var Personje = await _personajeRepository.AddEntity(personaje);
-            return Personje;
+            return await _unitOfWork.personajeRepository.Add(entity);
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            _personajeRepository.DeleteEntity(id);
-        }
-
-        public async Task<Personaje> Edit(Personaje personaje)
-        {
-            var personje = await _personajeRepository.UpdateEntity(personaje);
-            return personje; 
+          await _unitOfWork.personajeRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Personaje>> GetAll()
         {
-            var personajes = await _personajeRepository.GetAllEntities();
-            
-            return personajes.ToList();
+            return await _unitOfWork.personajeRepository.GetAll();
         }
 
         public async Task<Personaje> GetById(int id)
         {
-            var personaje = await _personajeRepository.GetEntity(id);
-            return personaje;
+            return await _unitOfWork.personajeRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<Personaje>> GetCustomsPersonajes(string sortOrder, string name, short? age, int? IdMovie)
+        public async Task<Personaje> Update(Personaje entity)
         {
-            var personaje = await _personajeRepository.GetAllEntities();
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                personaje = personaje.Where(n => n.Nombre.ToUpper() == name.ToUpper()).ToList();
-            }
-            if (age != null)
-            {
-                personaje = personaje.Where(e => e.Edad == age).ToList();
-            }
-            if (IdMovie != null)
-            {
-                personaje = personaje.Where(p => p.Peliculas.FirstOrDefault(x => x.Id == IdMovie) != null).ToList();
-            }
-
-            switch (sortOrder)
-            {
-                case "desc":
-                    personaje = personaje.OrderByDescending(p => p.Nombre.ToUpper());
-                    break;
-                case "asc":
-                    personaje = personaje.OrderBy(p => p.Nombre.ToUpper());
-                    break;
-                case "created":
-                    personaje = personaje.OrderBy(p => p.CreationDate);
-                    break;
-                case "deleted":
-                    personaje = personaje.OrderByDescending(p => p.DeletedStamp);
-                    break;
-                default:
-                    personaje = personaje.OrderBy(p => p.Id);
-                    break;
-            }
-            return personaje;
+            return await _unitOfWork.personajeRepository.Update(entity);
         }
     }
 }

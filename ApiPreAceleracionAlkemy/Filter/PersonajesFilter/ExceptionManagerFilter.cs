@@ -18,7 +18,7 @@ namespace ApiPreAceleracionAlkemy.Filter.PersonajesFilter
 
         public void OnException(ExceptionContext context)
         {
-            context.Result = new JsonResult("Fallo algo en la API" + _environment.ApplicationName+"La excepcion del tipo :"+context.Exception.GetType());
+            context.Result = new JsonResult("Fallo algo en la API " + _environment.ApplicationName + " La excepcion del tipo :" + context.Exception.GetType());
         }
     }
 }

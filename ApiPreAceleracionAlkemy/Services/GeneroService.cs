@@ -1,49 +1,54 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Services
 {
-    public class GeneroService : IGeneroService 
+    public class GeneroService : IGeneroService
     {
-        private readonly IGeneroRepository _generoRepository;
+        
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GeneroService(IGeneroRepository generoRepository)
+        public GeneroService(IUnitOfWork unitOfWork)
         {
-            _generoRepository = generoRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Genero> Create(Genero genero)
+        public GeneroService(Repository<Genero> repository)
         {
-            var genro =await _generoRepository.AddEntity(genero);
-            return genro;
+            _repository = repository;
         }
 
-        public void Delete(int id)
+        public async Task<Genero> Add(Genero entity)
         {
-            _generoRepository.DeleteEntity(id);
+            return await _unitOfWork.generoRepository.Add(entity);
         }
 
-        public async Task<Genero> Edit(Genero genero)
+        public async Task  Delete(int id)
         {
-            var gnero =await _generoRepository.UpdateEntity(genero);
-            return gnero;
+           await _unitOfWork.generoRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Genero>> GetAll()
         {
-            var generos =await _generoRepository.GetAllEntities();
-            return generos;
+            return await _unitOfWork.generoRepository.GetAll();
         }
 
         public async Task<Genero> GetById(int id)
         {
-            var genero =await _generoRepository.GetEntity(id);
-            return genero;
+            return await _unitOfWork.generoRepository.GetById(id);
+
+        }
+
+        public async Task<Genero> Update(Genero entity)
+        {
+            return await _unitOfWork.generoRepository.Update(entity);
         }
     }
 }

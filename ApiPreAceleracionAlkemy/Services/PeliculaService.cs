@@ -8,43 +8,38 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Services
 {
-    //TODO : Implementar logica de negocios que esta aplicada en el controlador de Peliculas //
     public class PeliculaService : IPeliculaService
     {
-        private readonly IPeliculaRepository _peliculaRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PeliculaService(IPeliculaRepository peliculaRepository)
+        public PeliculaService(IUnitOfWork unitOfWork)
         {
-            _peliculaRepository = peliculaRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<Pelicula> Create(Pelicula peli)
+        public async Task<Pelicula> Add(Pelicula entity)
         {
-            var pelicula = await _peliculaRepository.AddEntity(peli);
-            return pelicula;
+            return await _unitOfWork.peliculaRepository.Add(entity);
         }
 
-        public void Delete(int id)
+        public async Task  Delete(int id)
         {
-            var pelicula = _peliculaRepository.DeleteEntity(id);
-        }
-
-        public async Task<Pelicula> Edit(Pelicula peli)
-        {
-            var pelicula = await _peliculaRepository.UpdateEntity(peli);
-            return pelicula;
+              await _unitOfWork.peliculaRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Pelicula>> GetAll()
         {
-            var peliculas =await _peliculaRepository.GetAllEntities();
-            return peliculas.ToList();
+            return await _unitOfWork.peliculaRepository.GetAll();
         }
 
         public async Task<Pelicula> GetById(int id)
         {
-            var pelicula =await _peliculaRepository.GetEntity(id);
-            return pelicula;
+            return await _unitOfWork.peliculaRepository.GetById(id);
+        }
+
+        public async Task<Pelicula> Update(Pelicula entity)
+        {
+            return await _unitOfWork.peliculaRepository.Update(entity);
         }
     }
 }

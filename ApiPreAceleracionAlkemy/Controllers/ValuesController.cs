@@ -1,36 +1,32 @@
 ﻿using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
-using Microsoft.AspNetCore.Http;
+using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TypeFilter(typeof(ExceptionManagerFilter))]
     public class ValuesController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        public ValuesController(IConfiguration configuration)
+        private readonly PositionOptions _positionOptions;
+        public ValuesController(IOptions<PositionOptions> options )
         {
-            _configuration = configuration;
+            _positionOptions = options.Value;
         }
         [HttpGet]
         public ActionResult GetValues() {
 
-            
-            var title = _configuration["Position:Name"];
-            var name = _configuration["Position:Name"];
+            var title = _positionOptions.Name;
+            var name = _positionOptions.Title;
             return Ok(new
             {
                 titulo = title,
                 nombre = name
 
             }); 
-        }
+        } 
     }
 }

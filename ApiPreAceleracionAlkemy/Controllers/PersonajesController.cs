@@ -43,30 +43,6 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         /// <summary>
-        /// Lista los Personajes
-        /// </summary>
-        /// <param name="name"> Nombre del personaje.</param>
-        /// <param name="age"> Edad del personaje.</param>
-        /// <param name="movies"> Pelicula vinculada.</param>
-        /// <param name="sortOrder">Variable de ordenacion</param>
-        /// <response code="200">Se listo con exito los personajes</response>
-        /// <response code="204">No existe personajes para listar.</response>
-
-        [HttpGet]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [Route("characters")]
-        public async  Task<IActionResult> Get(string sortOrder,string name, short? age, int? movies)
-        {
-            var personaje = await _personajeService.GetCustomsPersonajes(sortOrder,name,age,movies);
-
-            if (!personaje.Any()) return NotFound();
-
-            return Ok(personaje);
-        }
-
-        /// <summary>
         ///  Crea un personaje
         /// </summary>
         /// <remarks>
@@ -97,7 +73,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-               await _personajeService.Create(personaje);
+               await _personajeService.Add(personaje);
             }
             catch (Exception)
             {
@@ -148,7 +124,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             try
             {
-                await _personajeService.Edit(personajeEdit);
+                await _personajeService.Update(personajeEdit);
             }
             catch (Exception)
             {
@@ -182,26 +158,11 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public async Task <IActionResult> Delete(int id)
         {
-
-            var internalpersonaje = _personajeService.GetById(id);
+            await  _personajeService.Delete(id);
             
-            if(internalpersonaje == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                _personajeService.Delete(id);
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
-            
-            return Ok();
+            return Ok("Se elimino el personaje correctamente.");
         }
     }
 }
