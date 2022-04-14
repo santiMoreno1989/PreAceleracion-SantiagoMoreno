@@ -1,12 +1,15 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiPreAceleracionAlkemy.Interfaces
+namespace ApiPreAceleracionAlkemy.Services
 {
-    public interface IPeliculaService : IRepository<Pelicula>
+    public interface IPeliculaService
     {
+        Task<Pelicula> Add(Pelicula entity);
+        Task Delete(int id);
+        Task<IEnumerable<Pelicula>> GetAll();
+        Task<Pelicula> GetById(int id);
+        Task<Pelicula> Update(Pelicula entity);
     }
 }

@@ -1,12 +1,15 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiPreAceleracionAlkemy.Interfaces
+namespace ApiPreAceleracionAlkemy.Services
 {
-    public interface IPersonajeService : IRepository<Personaje>
+    public interface IPersonajeService
     {
+        Task<Personaje> Add(Personaje entity);
+        Task Delete(int id);
+        Task<IEnumerable<Personaje>> GetAll();
+        Task<Personaje> GetById(int id);
+        Task<Personaje> Update(Personaje entity);
     }
 }
