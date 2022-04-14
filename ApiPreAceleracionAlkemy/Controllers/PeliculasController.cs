@@ -1,7 +1,5 @@
-﻿using ApiPreAceleracionAlkemy.Data;
-using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Interfaces;
-using ApiPreAceleracionAlkemy.Repositories;
+﻿using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PeliculaView;
 using AutoMapper;
@@ -15,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
 {
-    
+
     [ApiController]
     [Route(template:"api/[controller]")]
     [Produces("application/json")]

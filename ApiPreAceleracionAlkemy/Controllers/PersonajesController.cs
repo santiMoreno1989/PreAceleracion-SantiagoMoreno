@@ -1,24 +1,20 @@
-﻿using ApiPreAceleracionAlkemy.Data;
-using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Interfaces;
-using ApiPreAceleracionAlkemy.Repositories;
+﻿using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.PersonajeView;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles ="Admin,User")]
+    //[Authorize(Roles ="Admin,User")]
     [Produces("application/json")]
     public class PersonajesController : ControllerBase
     {
