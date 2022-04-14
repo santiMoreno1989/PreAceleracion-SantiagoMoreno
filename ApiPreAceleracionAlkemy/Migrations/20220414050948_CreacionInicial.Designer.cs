@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiPreAceleracionAlkemy.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220209001445_DeletedInPeliculaEntity")]
-    partial class DeletedInPeliculaEntity
+    [Migration("20220414050948_CreacionInicial")]
+    partial class CreacionInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,6 +78,12 @@ namespace ApiPreAceleracionAlkemy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedStamp")
+                        .HasColumnType("datetime2");
 
                     b.Property<short>("Edad")
                         .HasColumnType("smallint");
