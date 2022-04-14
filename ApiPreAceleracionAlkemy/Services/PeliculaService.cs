@@ -22,9 +22,9 @@ namespace ApiPreAceleracionAlkemy.Services
             return await _unitOfWork.peliculaRepository.Add(entity);
         }
 
-        public async Task  Delete(int id)
+        public async Task Delete(int id)
         {
-              await _unitOfWork.peliculaRepository.Delete(id);
+            await _unitOfWork.peliculaRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Pelicula>> GetAll()

@@ -25,7 +25,7 @@ namespace ApiPreAceleracionAlkemy.Services
 
         public async Task Delete(int id)
         {
-          await _unitOfWork.personajeRepository.Delete(id);
+            await _unitOfWork.personajeRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Personaje>> GetAll()
