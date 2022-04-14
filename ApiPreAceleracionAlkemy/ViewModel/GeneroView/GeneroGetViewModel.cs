@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiPreAceleracionAlkemy.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,5 +19,15 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
         [Display(Name = "Imagen")]
         public byte[] Imagen { get; set; }
         public DateTime? TimeStams { get; set; }
+
+        public static explicit operator GeneroGetViewModel(Genero v)
+        {
+            return new GeneroGetViewModel()
+            {
+                Nombre = v.Nombre,
+                Imagen = v.Imagen,
+                TimeStams = v.TimeStams
+            };
+        }
     }
 }
