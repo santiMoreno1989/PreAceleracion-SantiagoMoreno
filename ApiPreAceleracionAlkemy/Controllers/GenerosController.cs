@@ -1,5 +1,5 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Interfaces;
+using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -199,5 +199,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
             
             return Ok("Se elimino correctamente el genero   ");
         }
+
+        [HttpGet("GetByCondition")]
+        public IActionResult GetByName(string nombre) => Ok(_generoService.GetByCondition(nombre));
     }
 }
