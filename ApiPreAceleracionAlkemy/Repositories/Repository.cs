@@ -1,6 +1,7 @@
 ﻿using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,5 +52,8 @@ namespace ApiPreAceleracionAlkemy.Repositories
             await _context.SaveChangesAsync();
             return entity;
         }
+
+        public IEnumerable<T> FindByCondition(Func<T, bool> condition)
+            => _dbSet.Where(condition);
     }
 }
