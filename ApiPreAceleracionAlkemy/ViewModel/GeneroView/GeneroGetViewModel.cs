@@ -18,7 +18,9 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
 
         [Display(Name = "Imagen")]
         public byte[] Imagen { get; set; }
-        public DateTime? TimeStams { get; set; }
+        public DateTime FechaCreacion { get; set; }
+
+        public ICollection<Pelicula> Peliculas { get; set; }
 
         public static explicit operator GeneroGetViewModel(Genero v)
         {
@@ -26,7 +28,8 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
             {
                 Nombre = v.Nombre,
                 Imagen = v.Imagen,
-                TimeStams = v.TimeStams
+                FechaCreacion = v.FechaCreacion,
+                Peliculas = v.Peliculas    
             };
         }
     }

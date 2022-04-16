@@ -14,8 +14,8 @@ namespace ApiPreAceleracionAlkemy.Interfaces
         Task<T> Add(T entity);
         Task<T> Update(T entity);
         Task Delete(int id);
-
         IEnumerable<T> FindByCondition(Func<T,bool> condition);
+        IQueryable<T> GetQuery(Expression<Func<T, bool>> condition = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null);
 
     }
 }

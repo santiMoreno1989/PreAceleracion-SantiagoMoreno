@@ -55,5 +55,18 @@ namespace ApiPreAceleracionAlkemy.Repositories
 
         public IEnumerable<T> FindByCondition(Func<T, bool> condition)
             => _dbSet.Where(condition);
+
+        public IQueryable<T> GetQuery(Expression<Func<T, bool>> condition = null,Func<IQueryable<T>,IIncludableQueryable<T,object>> include= null)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            if (condition is not null)
+                query = query.Where(condition);
+
+            if (include is not null)
+                query = include(query);
+
+            return query;
+        }
     }
 }

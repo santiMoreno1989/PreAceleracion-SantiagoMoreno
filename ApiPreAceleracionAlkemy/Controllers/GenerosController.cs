@@ -1,6 +1,8 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Services;
+using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
+using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +31,21 @@ namespace ApiPreAceleracionAlkemy.Controllers
             _generoService = generoService;
         }
 
+        /// <summary>
+        /// Retorna un listado de generos IQueryable
+        /// </summary>
+        /// <param name="pageIndex">1</param>
+        /// <param name="pageSize">10</param>
+        /// <param name="orden"></param>
+        /// <returns></returns>
+        [HttpGet("Generos")]
+        public async Task<ActionResult<Pagination<GeneroGetViewModel>>> GetGenerosPaginados([FromQuery] int pageIndex, [FromQuery] int pageSize,[FromQuery] string orden) 
+            => Ok(await _generoService.GetGenerosAsync(pageIndex,pageSize,orden));
+
+        /// <summary>
+        ///  Retorna un listado de generos IEnumerable.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Genero>>> GetGeneros() {
 

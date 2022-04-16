@@ -2,8 +2,11 @@
 using ApiPreAceleracionAlkemy.Filter;
 using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
+using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
+using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +35,7 @@ namespace ApiPreAceleracionAlkemy.Services
             await _unitOfWork.generoRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<Genero>> GetAll()
-        {
-            return await _unitOfWork.generoRepository.GetAll();
-        }
+        public async Task<IEnumerable<Genero>> GetAll()=> await _unitOfWork.generoRepository.GetAll();
 
         public async Task<Genero> GetById(int id)
         {
@@ -58,5 +58,24 @@ namespace ApiPreAceleracionAlkemy.Services
             
             return internalGenero;
         }
+
+        public async Task<Pagination<GeneroGetViewModel>> GetGenerosAsync(int pageIndex, int pageSize,string sort)
+        {
+            var generos = _unitOfWork.generoRepository.GetQuery(
+                include: ge=> ge.Include(pe=> pe.Peliculas));
+            generos = sort switch
+            {
+                "NOMBRE_ASC" => generos.OrderBy(n => n.Nombre),
+                "NOMBRE_DESC" => generos.OrderByDescending(n => n.Nombre),
+
+                "FECHA_ASC" => generos.OrderBy(f=> f.FechaCreacion),
+                "FECHA_DESC" => generos.OrderByDescending(f=> f.FechaCreacion),
+
+                _ => generos.OrderBy(i=> i.Id)
+            };
+
+            return await generos.Select(ge => (GeneroGetViewModel)ge).PaginatedResponseAsync(pageIndex, pageSize);
+        }
+
     }
 }
