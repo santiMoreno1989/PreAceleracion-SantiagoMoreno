@@ -1,11 +1,7 @@
 using ApiPreAceleracionAlkemy.Context;
 using ApiPreAceleracionAlkemy.Data;
 using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
-using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Middleware;
-using ApiPreAceleracionAlkemy.Repositories;
-using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,12 +13,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SendGrid.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Serilog;
 
 namespace ApiPreAceleracionAlkemy
 {
@@ -141,6 +137,7 @@ namespace ApiPreAceleracionAlkemy
                 });
             }
 
+            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
