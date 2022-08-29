@@ -30,7 +30,7 @@ namespace ApiPreAceleracionAlkemy
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
-                .Enrich.With<CustomEnricher>()
+                //.Enrich.With<CustomEnricher>()
                 //.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticSearchNodeUri))
                 //{
                 //    AutoRegisterTemplate = true,

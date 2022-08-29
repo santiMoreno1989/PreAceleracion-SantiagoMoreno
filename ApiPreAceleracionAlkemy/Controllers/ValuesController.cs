@@ -1,5 +1,4 @@
-﻿using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
-using ApiPreAceleracionAlkemy.Wrappers;
+﻿using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;

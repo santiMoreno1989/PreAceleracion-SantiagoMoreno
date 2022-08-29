@@ -19,6 +19,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Serilog;
+using ApiPreAceleracionAlkemy.Utility;
 
 namespace ApiPreAceleracionAlkemy
 {
@@ -141,6 +142,8 @@ namespace ApiPreAceleracionAlkemy
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

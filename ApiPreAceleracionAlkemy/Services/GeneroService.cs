@@ -1,16 +1,10 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Filter;
-using ApiPreAceleracionAlkemy.Interfaces;
-using ApiPreAceleracionAlkemy.Repositories;
-using ApiPreAceleracionAlkemy.ViewModel;
+using ApiPreAceleracionAlkemy.Exceptions;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using ApiPreAceleracionAlkemy.Wrappers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Services
@@ -50,11 +44,14 @@ namespace ApiPreAceleracionAlkemy.Services
         public IEnumerable<GeneroGetViewModel> GetByCondition(string nombre) 
         {
             if (string.IsNullOrWhiteSpace(nombre) || nombre.Length < 3)
-                throw new NotFoundException($"No se han encontrado resultados con el nombre : {nombre}");
+                throw new BadRequestException($"No se han encontrado resultados con el nombre : {nombre}");
 
             var internalGenero = _unitOfWork.generoRepository.FindByCondition(
                 n => n.Nombre.ToLower().Contains(nombre.ToLower())).Select(x=>(GeneroGetViewModel) x)
                 .OrderBy(n=> n.Nombre);
+
+            if (!internalGenero.Any())
+                throw new NotFoundException($"No se ha encontrado el genero : {nombre} ");
             
             return internalGenero;
         }

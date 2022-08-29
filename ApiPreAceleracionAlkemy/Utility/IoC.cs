@@ -1,14 +1,8 @@
-﻿using ApiPreAceleracionAlkemy.Entities;
-using ApiPreAceleracionAlkemy.Filter.PersonajesFilter;
-using ApiPreAceleracionAlkemy.Interfaces;
+﻿using ApiPreAceleracionAlkemy.Interfaces;
 using ApiPreAceleracionAlkemy.Repositories;
 using ApiPreAceleracionAlkemy.Services;
 using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiPreAceleracionAlkemy.Middleware
 {
@@ -23,7 +17,6 @@ namespace ApiPreAceleracionAlkemy.Middleware
             services.AddSingleton<IMailService, MailService>();
             services.AddSendGrid(k => k.ApiKey = "...Ingrese SendGrid Key Aqui...");
             services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<ActionFilter>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             return services;
