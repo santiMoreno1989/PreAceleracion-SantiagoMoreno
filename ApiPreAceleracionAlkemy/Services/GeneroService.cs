@@ -41,10 +41,10 @@ namespace ApiPreAceleracionAlkemy.Services
         {
             return await _unitOfWork.generoRepository.Update(entity);
         }
-        public IEnumerable<GeneroGetViewModel> GetByCondition(string nombre) 
+        public async Task<IEnumerable<GeneroGetViewModel>> GetByCondition(string nombre) 
         {
             if (string.IsNullOrWhiteSpace(nombre) || nombre.Length < 3)
-                throw new BadRequestException($"No se han encontrado resultados con el nombre : {nombre}");
+                throw new BadRequestException($"Debe ingresar al menos 3 caracteres para la consulta");
 
             var internalGenero = _unitOfWork.generoRepository.FindByCondition(
                 n => n.Nombre.ToLower().Contains(nombre.ToLower())).Select(x=>(GeneroGetViewModel) x)

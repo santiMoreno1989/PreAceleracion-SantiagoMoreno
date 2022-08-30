@@ -1,4 +1,5 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
+using ApiPreAceleracionAlkemy.Exceptions;
 using ApiPreAceleracionAlkemy.Services;
 using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
@@ -218,6 +219,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         }
 
         [HttpGet("GetByCondition")]
-        public IActionResult GetByName(string nombre) => Ok(_generoService.GetByCondition(nombre));
+        public async Task<IActionResult> GetByName(string nombre) 
+        {
+           return Ok(await _generoService.GetByCondition(nombre));
+        } 
     }
 }

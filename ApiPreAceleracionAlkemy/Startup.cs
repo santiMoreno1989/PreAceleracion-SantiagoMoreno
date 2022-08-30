@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Text;
 using Serilog;
 using ApiPreAceleracionAlkemy.Utility;
+using Microsoft.AspNetCore.Http;
 
 namespace ApiPreAceleracionAlkemy
 {
@@ -124,7 +125,7 @@ namespace ApiPreAceleracionAlkemy
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+
                 //Habilitar swagger
                 app.UseSwagger();
                 
@@ -137,14 +138,18 @@ namespace ApiPreAceleracionAlkemy
                     c.DefaultModelsExpandDepth(-1);
                 });
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
             app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

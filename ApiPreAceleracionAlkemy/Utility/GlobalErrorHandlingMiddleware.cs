@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using UnauthorizedAccessException = ApiPreAceleracionAlkemy.Exceptions.UnauthorizedAccessException;
-using NotImplementedException = ApiPreAceleracionAlkemy.Exceptions.NotImplementedException;
 using KeyNotFoundException = ApiPreAceleracionAlkemy.Exceptions.KeyNotFoundException;
-using System.Text.Json;
-using Newtonsoft.Json;
-using Serilog;
+using NotImplementedException = ApiPreAceleracionAlkemy.Exceptions.NotImplementedException;
+using UnauthorizedAccessException = ApiPreAceleracionAlkemy.Exceptions.UnauthorizedAccessException;
 
 namespace ApiPreAceleracionAlkemy.Utility
 {
@@ -26,9 +23,8 @@ namespace ApiPreAceleracionAlkemy.Utility
             {
                 await _next(context);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-
                 await HandleExceptionAsync(context, ex);
             }
         }

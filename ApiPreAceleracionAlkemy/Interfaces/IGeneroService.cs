@@ -13,7 +13,7 @@ namespace ApiPreAceleracionAlkemy.Services
         Task<IEnumerable<Genero>> GetAll();
         Task<Genero> GetById(int id);
         Task<Genero> Update(Genero entity);
-        IEnumerable<GeneroGetViewModel> GetByCondition(string nombre);
+        Task<IEnumerable<GeneroGetViewModel>> GetByCondition(string nombre);
         Task<Pagination<GeneroGetViewModel>> GetGenerosAsync(int pageIndex, int pageSize,string order);
     }
 }
