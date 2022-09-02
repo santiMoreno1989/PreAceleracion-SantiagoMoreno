@@ -47,12 +47,8 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///  Retorna un listado de generos IEnumerable.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genero>>> GetGeneros() {
-
-            return Ok(await _generoService.GetAll());
-        }
-
+        [HttpGet("grid")]
+        public async Task<ActionResult<IEnumerable<Genero>>> GetGeneros() => Ok(await _generoService.GetAll());
 
         /// <summary>
         /// Obtiene un Genero de acuerdo a su Id
@@ -60,27 +56,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <param name="id">Id del Genero</param>
         /// <returns>Los datos del Genero</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(200,Type =typeof(Genero))]
-        [ProducesResponseType(404,Type =typeof(Genero))]
-
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public async Task<IActionResult> Get(int id)
-        {
-
-            var genero = await _generoService.GetById(id);
-            if (genero == null)
-            {
-                return NotFound(new
-                {
-                    Status = "Error",
-                    Messege = "No se encontro ningun genero"
-                });
-            } 
-           
-            return Ok(genero);
-        }
-
+        [ProducesResponseType(200, Type = typeof(Genero))]
+        [ProducesResponseType(404, Type = typeof(Genero))]
+        public async Task<IActionResult> Get(int id) => Ok(await _generoService.GetById(id));
 
         /// <summary>
         /// Permite registrar un nuevo genero de pelicula
@@ -98,35 +76,10 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///         }
         /// 
         /// </remarks>
-
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(GeneroPostViewModel))]
         [ProducesResponseType(400, Type = typeof(GeneroPostViewModel))]
-
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public async Task<IActionResult> Post(GeneroPostViewModel generoPostViewModel)
-        {
-            var genero = new Genero
-            {
-                Nombre = generoPostViewModel.Nombre,
-                Imagen = generoPostViewModel.Imagen
-            };
-
-            try
-            {
-                  await  _generoService.Add(genero);
-                
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
-            
-            
-            return Ok(genero);
-        }
+        public async Task<IActionResult> Post(GeneroPostViewModel generoPostViewModel) => Ok(await _generoService.Add(generoPostViewModel));
 
         /// <summary>
         /// Permite editar un Genero
@@ -146,48 +99,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <response code="200">Se edito el genero correctamente.</response>
         /// <response code="400">No se pudo editar el genero.</response>
         /// <response code="404">No se encontro el genero.</response>
-
-
         [HttpPut]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put(GeneroPutViewModel generoPutViewModel) => Ok(await _generoService.Update(generoPutViewModel));
 
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public async Task<IActionResult> Put(GeneroPutViewModel generoPutViewModel)
-        {
-            var editarGenero = await _generoService.GetById(generoPutViewModel.Id);
-
-            if (editarGenero == null)
-            {
-                return NotFound();
-            }
-
-
-
-            try
-            {
-                editarGenero.Nombre = generoPutViewModel.Nombre;
-                editarGenero.Imagen = generoPutViewModel.Imagen;
-
-                if (ModelState.IsValid)
-                {
-                  await  _generoService.Update(editarGenero);
-                }
-
-            }
-            catch (Exception)
-            {
-                if (editarGenero == null)
-                {
-                    return BadRequest();
-                }
-            }
-            
-            return Ok(editarGenero);
-        }
         /// <summary>
         /// Permite eliminar un genero
         /// </summary>
@@ -211,12 +129,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async  Task<IActionResult> Delete(int id)
-        {
-            await  _generoService.Delete(id);
-            
-            return Ok("Se elimino correctamente el genero   ");
-        }
+        public async Task<IActionResult> Delete(int id) => Ok(await _generoService.Delete(id));
 
         [HttpGet("GetByCondition")]
         public async Task<IActionResult> GetByName(string nombre) 

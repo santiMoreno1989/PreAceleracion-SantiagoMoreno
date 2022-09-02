@@ -1,5 +1,6 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
 using ApiPreAceleracionAlkemy.Exceptions;
+using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.EntityFrameworkCore;
@@ -19,27 +20,66 @@ namespace ApiPreAceleracionAlkemy.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Genero> Add(Genero entity)
+        public async Task<Genero> Add(GeneroPostViewModel generoPostViewModel)
         {
+            var generos =await _unitOfWork.generoRepository.GetAll();
+            var nombreGenero = generos.Select(n => n.Nombre.ToUpper());
+
+            if (nombreGenero.Contains(generoPostViewModel.Nombre.ToUpper()))
+                throw new BadRequestException("El genero que intenta crear ya existe.");
+
+            var entity = new Genero
+            {
+                Nombre = generoPostViewModel.Nombre,
+                Imagen= generoPostViewModel.Imagen
+            };
+
             return await _unitOfWork.generoRepository.Add(entity);
         }
 
-        public async Task Delete(int id)
+        public async Task<DeleteViewModelResponse> Delete(int id)
         {
-            await _unitOfWork.generoRepository.Delete(id);
+            var generoExist = await GetById(id);
+
+            await _unitOfWork.generoRepository.Delete(generoExist.Id);
+            return new DeleteViewModelResponse
+            {
+                 StatusCode=200,
+                 Mensaje ="Se elimino correctamente el genero."
+            };
         }
 
-        public async Task<IEnumerable<Genero>> GetAll()=> await _unitOfWork.generoRepository.GetAll();
+        public async Task<IEnumerable<Genero>> GetAll() 
+        {
+            var generos = await _unitOfWork.generoRepository.GetAll();
+
+            if (!generos.Any())
+                throw new NotFoundException("No se han encontrado generos en la base de datos.");
+            
+            return generos;
+        } 
 
         public async Task<Genero> GetById(int id)
         {
-            return await _unitOfWork.generoRepository.GetById(id);
+            var genero= await _unitOfWork.generoRepository.GetById(id);
 
+            if (genero == null)
+                throw new NotFoundException($"No se ha encontrago el genero : {genero}");
+            
+            return genero;
         }
 
-        public async Task<Genero> Update(Genero entity)
+        public async Task<Genero> Update(GeneroPutViewModel entity)
         {
-            return await _unitOfWork.generoRepository.Update(entity);
+            var generoExist = await GetById(entity.Id);
+
+            //if (generoExist == null)
+            //    throw new NotFoundException($"El genero con ID : {entity.Id} no existe");
+
+            generoExist.Nombre = entity.Nombre;
+            generoExist.Imagen = entity.Imagen;
+
+            return await _unitOfWork.generoRepository.Update(generoExist);
         }
         public async Task<IEnumerable<GeneroGetViewModel>> GetByCondition(string nombre) 
         {
