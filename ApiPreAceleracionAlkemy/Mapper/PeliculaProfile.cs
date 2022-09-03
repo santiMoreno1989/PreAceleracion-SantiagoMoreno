@@ -11,7 +11,10 @@ namespace ApiPreAceleracionAlkemy.Mapper
         {
             CreateMap<Pelicula,PeliculasGetViewModel>();
             CreateMap<PeliculaPostViewModel, Pelicula>();
-            CreateMap<PeliculaPutViewModel, Pelicula>();
+            CreateMap<PeliculaPutViewModel, Pelicula>()
+                .ForMember(x=> x.Titulo,map=> map.MapFrom(src=> src.Titulo))
+                .ForMember(x=> x.Imagen,map=> map.MapFrom(src=> src.Imagen))
+                .ForMember(x=> x.Calificacion,map=> map.MapFrom(src=> src.Calificacion));
         }
     }
 }

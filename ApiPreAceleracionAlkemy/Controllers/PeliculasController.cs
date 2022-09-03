@@ -32,21 +32,12 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// Obtiene todas las peliculas registradas
         /// </summary>
         /// <response code="200">Se listo con exito las peliculas.</response>
-        /// <response code="204">No existen peliculas.</response>
-        [HttpGet]
-        [Route("PeliculasList")]
+        /// <response code="404">No existen peliculas.</response>
+        [HttpGet("grid")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [AllowAnonymous]
-        public async  Task<ActionResult<IEnumerable<PeliculasGetViewModel>>> GetPeliculas()
-        {
-            var peliculas =await _peliculaService.GetAll();
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IEnumerable<PeliculasGetViewModel>>> GetPeliculas() => Ok(await _peliculaService.GetAll());
 
-            var model = _mapper.Map<IEnumerable<PeliculasGetViewModel>>(peliculas);
-            if (!model.Any()) { return NoContent(); }
-
-            return Ok(model);
-        }
         /// <summary>
         /// 
         /// </summary>
@@ -55,14 +46,9 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <param name="order">Orden de las peliculas</param>
         /// <response code="200">Retorna una lista de peliculas</response>
         /// <response code="204">No hay contenido</response>
-        [HttpGet]
+        [HttpGet("byCondition")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [Route("movies")]
-        [AllowAnonymous]
-
-        // ** TODO : APLICAR AUTOMAPPER **//
-        
         public async Task<IActionResult> Get(string name,int? genre, string order)
         {
             var peliculas = await _peliculaService.GetAll();
@@ -74,10 +60,10 @@ namespace ApiPreAceleracionAlkemy.Controllers
                                 select b).ToList();
                 }
             
-            if(genre != null)
-                {
-                    peliculas = peliculas.Where(x => x.Genero.FirstOrDefault(z => z.Id == genre) != null).ToList();
-                }
+            //if(genre != null)
+            //    {
+            //        peliculas = peliculas.Where(x => x..FirstOrDefault(z => z.Id == genre) != null).ToList();
+            //    }
            
              if (order == ASC)
                 {
@@ -96,6 +82,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
 
             return Ok(peliculas);
         }
+
         /// <summary>
         /// Permite registrar una nueva pelicula
         /// </summary>
@@ -114,36 +101,13 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///             }
         /// 
         /// </remarks>
-        /// <response code="200">Se Creo la pelicula correctamente.</response>
+        /// <response code="201">Se Creo la pelicula correctamente.</response>
         /// <response code="400">No se pudo crear la pelicula</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post(PeliculaPostViewModel peliculaViewModel) => Created("Creado con exito.",await _peliculaService.Add(peliculaViewModel));
 
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public async Task<IActionResult> Post(PeliculaPostViewModel peliculaViewModel)
-        {
-            var pelicula = new Pelicula
-            {
-                Imagen = peliculaViewModel.Imagen,
-                Titulo = peliculaViewModel.Titulo,
-                Calificacion = peliculaViewModel.Calificacion
-            };
-            try
-            {
-              await  _peliculaService.Add(pelicula);
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
-
-                
-        
-            return Ok(pelicula);
-        }
         /// <summary>
         /// Permite editar una pelicula
         /// </summary>
@@ -159,43 +123,18 @@ namespace ApiPreAceleracionAlkemy.Controllers
         ///             }
         /// 
         /// </remarks>
+        /// <param name="id"></param>
         /// <param name="peliculaViewModel"></param>
         ///<response code="200">Se edito la pelicula correctamente.</response> 
         ///<response code="400">No se pudo editar la pelicula.</response>
         ///<response code="404">No se encontro la pelicula</response>
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put(int id,[FromBody]PeliculaPutViewModel peliculaViewModel) => Ok(await _peliculaService.UpdateAsync(id,peliculaViewModel));
 
-        // ** TODO : APLICAR AUTOMAPPER **//
-
-        public async Task<IActionResult> Put(PeliculaPutViewModel peliculaViewModel)
-        {
-            var  movie =await _peliculaService.GetById(peliculaViewModel.Id);
-
-            if(movie == null)
-            {
-                return NotFound("Pelicula no encontrada");
-            }
-            movie.Imagen = peliculaViewModel.Imagen;
-            movie.Titulo = peliculaViewModel.Titulo;
-            movie.Calificacion = peliculaViewModel.Calificacion;
-
-            try
-            {
-               await _peliculaService.Update(movie);
-            }
-            catch (Exception)
-            {
-
-                return BadRequest();
-            }
-            
-
-            return Ok(movie);
-        }
         /// <summary>
         /// 
         /// </summary>
@@ -212,13 +151,10 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <reponse code="200">Se elimino correctamente la pelicula.</reponse>
         /// <response code="400">No se pudo eliminar la pelicula.</response>
         /// <response code="404">No se encontro la pelicula.</response>
-
-
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Route("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _peliculaService.Delete(id);
