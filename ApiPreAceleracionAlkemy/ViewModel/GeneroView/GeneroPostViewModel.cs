@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
@@ -15,5 +16,7 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
 
         [Display(Name = "Imagen")]
         public byte[] Imagen { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
     }
 }
