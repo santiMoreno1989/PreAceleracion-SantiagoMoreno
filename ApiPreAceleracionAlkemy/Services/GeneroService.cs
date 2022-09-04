@@ -78,6 +78,7 @@ namespace ApiPreAceleracionAlkemy.Services
 
             generoExist.Nombre = entity.Nombre;
             generoExist.Imagen = entity.Imagen;
+            generoExist.FechaModificacion = entity.FechaModificacion;
 
             return await _unitOfWork.generoRepository.Update(generoExist);
         }

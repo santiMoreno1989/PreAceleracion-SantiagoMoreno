@@ -17,7 +17,7 @@ namespace ApiPreAceleracionAlkemy.Entities
         public DateTime? TimeStams { get; set; }
 
         public DateTime FechaCreacion { get; set; }
-        public DateTime FechaModificacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
 
         public ICollection<Pelicula> Peliculas { get; set; }
     }
