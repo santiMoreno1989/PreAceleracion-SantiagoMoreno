@@ -13,7 +13,7 @@ namespace ApiPreAceleracionAlkemy.Services
         Task<DeleteViewModelResponse> Delete(int id);
         Task<IEnumerable<Genero>> GetAll();
         Task<Genero> GetById(int id);
-        Task<Genero> Update(GeneroPutViewModel entity);
+        Task<Genero> Update(int id, GeneroPutViewModel entity);
         Task<IEnumerable<GeneroGetViewModel>> GetByCondition(string nombre);
         Task<Pagination<GeneroGetViewModel>> GetGenerosAsync(int pageIndex, int pageSize,string order);
     }

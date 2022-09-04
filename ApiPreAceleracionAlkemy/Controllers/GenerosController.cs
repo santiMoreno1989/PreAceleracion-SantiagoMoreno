@@ -84,6 +84,7 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <summary>
         /// Permite editar un Genero
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="generoPutViewModel"></param>
         /// <remarks>
         ///   **Sample request** :
@@ -99,12 +100,12 @@ namespace ApiPreAceleracionAlkemy.Controllers
         /// <response code="200">Se edito el genero correctamente.</response>
         /// <response code="400">No se pudo editar el genero.</response>
         /// <response code="404">No se encontro el genero.</response>
-        [HttpPut]
+        [HttpPut("{id}")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(GeneroPutViewModel generoPutViewModel) => Ok(await _generoService.Update(generoPutViewModel));
+        public async Task<IActionResult> Put(int id,[FromBody] GeneroPutViewModel generoPutViewModel) => Ok(await _generoService.Update(id,generoPutViewModel));
 
         /// <summary>
         /// Permite eliminar un genero

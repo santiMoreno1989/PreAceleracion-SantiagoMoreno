@@ -64,14 +64,14 @@ namespace ApiPreAceleracionAlkemy.Services
             var genero= await _unitOfWork.generoRepository.GetById(id);
 
             if (genero == null)
-                throw new NotFoundException($"No se ha encontrago el genero : {genero}");
+                throw new NotFoundException($"No se ha encontrago el genero con ID : {id}");
             
             return genero;
         }
 
-        public async Task<Genero> Update(GeneroPutViewModel entity)
+        public async Task<Genero> Update(int id, GeneroPutViewModel entity)
         {
-            var generoExist = await GetById(entity.Id);
+            var generoExist = await GetById(id);
 
             //if (generoExist == null)
             //    throw new NotFoundException($"El genero con ID : {entity.Id} no existe");
