@@ -3,60 +3,61 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ApiPreAceleracionAlkemy.Migrations
 {
-    public partial class CreacionInicial : Migration
+    public partial class creacionInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Generos",
+                name: "Genero",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    TimeStams = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Nombre = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SoftDelete = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Generos", x => x.Id);
+                    table.PrimaryKey("PK_Genero", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Peliculas",
+                name: "Pelicula",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Deleted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SoftDelete = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Calificacion = table.Column<short>(type: "smallint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Peliculas", x => x.Id);
+                    table.PrimaryKey("PK_Pelicula", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personajes",
+                name: "Personaje",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Imagen = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Nombre = table.Column<string>(type: "varchar(300)", nullable: false),
                     Edad = table.Column<short>(type: "smallint", nullable: false),
-                    Peso = table.Column<int>(type: "int", nullable: false),
-                    Historia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Peso = table.Column<int>(type: "int", nullable: true),
+                    Historia = table.Column<string>(type: "varchar(1500)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DeletedStamp = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    SoftDelete = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personajes", x => x.Id);
+                    table.PrimaryKey("PK_Personaje", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,15 +71,15 @@ namespace ApiPreAceleracionAlkemy.Migrations
                 {
                     table.PrimaryKey("PK_GeneroPelicula", x => new { x.GeneroId, x.PeliculasId });
                     table.ForeignKey(
-                        name: "FK_GeneroPelicula_Generos_GeneroId",
+                        name: "FK_GeneroPelicula_Genero_GeneroId",
                         column: x => x.GeneroId,
-                        principalTable: "Generos",
+                        principalTable: "Genero",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GeneroPelicula_Peliculas_PeliculasId",
+                        name: "FK_GeneroPelicula_Pelicula_PeliculasId",
                         column: x => x.PeliculasId,
-                        principalTable: "Peliculas",
+                        principalTable: "Pelicula",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -94,15 +95,15 @@ namespace ApiPreAceleracionAlkemy.Migrations
                 {
                     table.PrimaryKey("PK_PeliculaPersonaje", x => new { x.PeliculasId, x.PersonajesId });
                     table.ForeignKey(
-                        name: "FK_PeliculaPersonaje_Peliculas_PeliculasId",
+                        name: "FK_PeliculaPersonaje_Pelicula_PeliculasId",
                         column: x => x.PeliculasId,
-                        principalTable: "Peliculas",
+                        principalTable: "Pelicula",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PeliculaPersonaje_Personajes_PersonajesId",
+                        name: "FK_PeliculaPersonaje_Personaje_PersonajesId",
                         column: x => x.PersonajesId,
-                        principalTable: "Personajes",
+                        principalTable: "Personaje",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -127,13 +128,13 @@ namespace ApiPreAceleracionAlkemy.Migrations
                 name: "PeliculaPersonaje");
 
             migrationBuilder.DropTable(
-                name: "Generos");
+                name: "Genero");
 
             migrationBuilder.DropTable(
-                name: "Peliculas");
+                name: "Pelicula");
 
             migrationBuilder.DropTable(
-                name: "Personajes");
+                name: "Personaje");
         }
     }
 }

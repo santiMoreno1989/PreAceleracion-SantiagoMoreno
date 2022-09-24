@@ -15,7 +15,7 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
         public string Nombre { get; set; }
 
         [Display(Name = "Imagen")]
-        public byte[] Imagen { get; set; }
+        public string Imagen { get; set; }
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
     }

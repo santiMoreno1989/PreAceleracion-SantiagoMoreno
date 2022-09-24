@@ -12,9 +12,9 @@ namespace ApiPreAceleracionAlkemy.Entities
 
         public string Nombre { get; set; }
 
-        public byte[] Imagen { get; set; }
+        public string Imagen { get; set; }
 
-        public DateTime? TimeStams { get; set; }
+        public DateTime? SoftDelete { get; set; }
 
         public DateTime FechaCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }

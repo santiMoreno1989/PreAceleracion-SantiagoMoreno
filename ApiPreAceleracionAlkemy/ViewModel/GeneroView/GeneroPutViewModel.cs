@@ -11,7 +11,7 @@ namespace ApiPreAceleracionAlkemy.ViewModel.GeneroView
         [Required]
         [MaxLength(90,ErrorMessage ="Ha excedido el numero maximo de 90 caracteres.")]
         public string Nombre { get; set; }
-        public byte[] Imagen { get; set; }
+        public string Imagen { get; set; }
         public DateTime FechaModificacion { get; set; } = DateTime.Now;
 
     }

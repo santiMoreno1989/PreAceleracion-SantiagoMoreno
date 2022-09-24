@@ -32,18 +32,20 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("Imagen")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Imagen")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("TimeStams")
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<DateTime?>("SoftDelete")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Generos");
+                    b.ToTable("Genero");
                 });
 
             modelBuilder.Entity("ApiPreAceleracionAlkemy.Entities.Pelicula", b =>
@@ -56,21 +58,23 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.Property<short>("Calificacion")
                         .HasColumnType("smallint");
 
-                    b.Property<DateTime?>("Deleted")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("Imagen")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Imagen")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("SoftDelete")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Titulo")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Peliculas");
+                    b.ToTable("Pelicula");
                 });
 
             modelBuilder.Entity("ApiPreAceleracionAlkemy.Entities.Personaje", b =>
@@ -83,27 +87,28 @@ namespace ApiPreAceleracionAlkemy.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedStamp")
-                        .HasColumnType("datetime2");
-
                     b.Property<short>("Edad")
                         .HasColumnType("smallint");
 
                     b.Property<string>("Historia")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(1500)");
 
-                    b.Property<byte[]>("Imagen")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Imagen")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("varchar(300)");
 
-                    b.Property<int>("Peso")
+                    b.Property<int?>("Peso")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("SoftDelete")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Personajes");
+                    b.ToTable("Personaje");
                 });
 
             modelBuilder.Entity("GeneroPelicula", b =>

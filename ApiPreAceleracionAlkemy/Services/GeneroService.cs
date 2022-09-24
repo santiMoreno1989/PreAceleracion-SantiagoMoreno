@@ -4,6 +4,7 @@ using ApiPreAceleracionAlkemy.ViewModel;
 using ApiPreAceleracionAlkemy.ViewModel.GeneroView;
 using ApiPreAceleracionAlkemy.Wrappers;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -112,6 +113,7 @@ namespace ApiPreAceleracionAlkemy.Services
                 _ => generos.OrderBy(i=> i.Id)
             };
 
+            
             return await generos.Select(ge => (GeneroGetViewModel)ge).PaginatedResponseAsync(pageIndex, pageSize);
         }
 

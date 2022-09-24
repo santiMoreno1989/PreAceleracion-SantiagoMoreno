@@ -1,5 +1,6 @@
 ﻿using ApiPreAceleracionAlkemy.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ApiPreAceleracionAlkemy.Data
 {
@@ -15,9 +16,11 @@ namespace ApiPreAceleracionAlkemy.Data
         {
 
         }
-        public DbSet<Personaje> Personajes { get; set; }
-        public DbSet<Pelicula> Peliculas { get; set; }
-        public DbSet<Genero> Generos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) 
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
       
     }
 
